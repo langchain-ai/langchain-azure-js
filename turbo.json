@@ -1,8 +1,42 @@
 {
-  "extends": ["//"],
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env"],
   "pipeline": {
     "build": {
-      "outputs": ["**/dist/**"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"]
+    },
+    "format": {
+      "dependsOn": ["^format"]
+    },
+    "format:check": {
+      "dependsOn": ["^format:check"]
+    },
+    "test": {
+      "cache": false,
+      "dependsOn": ["^build", "build"]
+    },
+    "test:ci": {
+      "outputs": [],
+      "dependsOn": ["^test", "test"]
+    },
+    "test:single": {
+      "dependsOn": ["^build", "build"]
+    },
+    "test:int": {
+      "dependsOn": ["^build", "build"]
+    },
+    "test:integration": {
+      "dependsOn": ["^build", "build", "test:int"]
+    },
+    "clean": {
+      "dependsOn": ["^clean"]
     },
     "build:internal": {
       "dependsOn": ["^build:internal"]
