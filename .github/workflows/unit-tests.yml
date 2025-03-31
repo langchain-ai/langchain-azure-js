@@ -33,13 +33,13 @@ jobs:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "true"
     steps:
       - uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
-      - name: Enable Corepack
-        run: corepack enable
       - name: Install dependencies
         run: yarn install --immutable
         # Running `test:unit:ci` from root will build first, however debugging
