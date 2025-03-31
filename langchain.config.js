@@ -19,4 +19,5 @@ export const config = {
   cjsSource: "./dist-cjs",
   cjsDestination: "./dist",
   abs,
+  additionalGitignorePaths: [".env"],
 };
