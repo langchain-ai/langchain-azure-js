@@ -1,0 +1,6 @@
+name: CodeQL config
+queries: 
+  - uses: security-extended
+paths-ignore:
+  - '/release_workspace.js'
+  - '**/*.test.ts'
