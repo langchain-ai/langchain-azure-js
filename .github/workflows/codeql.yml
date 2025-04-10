@@ -19,8 +19,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        # - language: actions
-        #   build-mode: none
+        - language: actions
+          build-mode: none
         - language: javascript-typescript
           build-mode: none
         # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
