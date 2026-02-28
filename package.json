@@ -46,6 +46,11 @@
     "typescript": "~5.1.6"
   },
   "resolutions": {
-    "dpdm@^3.12.0": "patch:dpdm@npm%3A3.12.0#./.yarn/patches/dpdm-npm-3.12.0-0dfdd8e3b8.patch"
+    "dpdm@^3.12.0": "patch:dpdm@npm%3A3.12.0#./.yarn/patches/dpdm-npm-3.12.0-0dfdd8e3b8.patch",
+    "langsmith": ">=0.4.6",
+    "lodash": ">=4.17.23",
+    "js-yaml": ">=4.1.1",
+    "semver": ">=7.5.2",
+    "rollup": ">=4.59.0"
   }
 }
