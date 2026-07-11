@@ -2,7 +2,7 @@
   "name": "langchain-azure-js",
   "private": true,
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "homepage": "https://github.com/langchain-ai/langchain-azure-js",
   "repository": {
