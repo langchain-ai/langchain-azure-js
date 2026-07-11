@@ -1,105 +1,71 @@
-# 🦜️🔗 LangChain.js
+# 🦜️🔗langchain-azure-js
 
-⚡ Building applications with LLMs through composability ⚡
+[![CI](https://github.com/langchain-ai/langchain-azure-js/actions/workflows/ci.yml/badge.svg)](https://github.com/langchain-ai/langchain-azure-js/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-[![CI](https://github.com/langchain-ai/langchainjs/actions/workflows/ci.yml/badge.svg)](https://github.com/langchain-ai/langchainjs/actions/workflows/ci.yml) ![npm](https://img.shields.io/npm/dm/langchain) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/langchainai.svg?style=social&label=Follow%20%40LangChainAI)](https://twitter.com/langchainai)  [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/langchain-ai/langchainjs)
-[<img src="https://github.com/codespaces/badge.svg" title="Open in Github Codespace" width="150" height="20">](https://codespaces.new/langchain-ai/langchainjs)
+Azure integrations for [LangChain.js](https://github.com/langchain-ai/langchainjs), developed as a pnpm workspace.
 
-Looking for the Python version? Check out [LangChain](https://github.com/langchain-ai/langchain).
+This repository uses pnpm to manage dependencies and scripts across multiple workspaces.
 
-To help you ship LangChain apps to production faster, check out [LangSmith](https://smith.langchain.com).
-[LangSmith](https://smith.langchain.com) is a unified developer platform for building, testing, and monitoring LLM applications.
+## Project status
 
-## ⚡️ Quick Install
+This repository is under active development. The `langchain-azure` workspace currently contains scaffolding for chat model, LLM, and vector store integrations; their core service methods are not implemented yet. Do not use the package in production until those integrations and their tests are complete.
 
-You can use npm, yarn, or pnpm to install LangChain.js
+## Repository layout
 
-`npm install -S langchain` or `yarn add langchain` or `pnpm add langchain`
+```text
+.
+|-- libs/
+|   `-- langchain-azure/  # LangChain Azure integration package
+|-- patches/              # pnpm dependency patches
+|-- package.json          # Workspace scripts and tool versions
+`-- pnpm-workspace.yaml   # Workspace and dependency configuration
+```
 
-## 🌐 Supported Environments
+## Prerequisites
 
-LangChain is written in TypeScript and can be used in:
+- Node.js 20 or higher, as declared by the root `engines` field.
+- pnpm 10.14.0, as declared by the root `packageManager` field
+- Corepack, for activating the repository's pinned pnpm version
 
-- Node.js (ESM and CommonJS) - 18.x, 19.x, 20.x, 22.x
-- Cloudflare Workers
-- Vercel / Next.js (Browser, Serverless and Edge functions)
-- Supabase Edge Functions
-- Browser
-- Deno
+## Setup
 
-## 🤔 What is LangChain?
+From the repository root:
 
-**LangChain** is a framework for developing applications powered by language models. It enables applications that:
-- **Are context-aware**: connect a language model to sources of context (prompt instructions, few shot examples, content to ground its response in, etc.)
-- **Reason**: rely on a language model to reason (about how to answer based on provided context, what actions to take, etc.)
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+pnpm build
+```
 
-This framework consists of several parts.
-- **Open-source libraries**: Build your applications using LangChain's open-source [building blocks](https://js.langchain.com/docs/concepts/lcel), [components](https://js.langchain.com/docs/concepts), and [third-party integrations](https://js.langchain.com/docs/integrations/platforms/).
-Use [LangGraph.js](https://js.langchain.com/docs/concepts/#langgraphjs) to build stateful agents with first-class streaming and human-in-the-loop support.
-- **Productionization**: Use [LangSmith](https://docs.smith.langchain.com/) to inspect, monitor and evaluate your chains, so that you can continuously optimize and deploy with confidence.
-- **Deployment**: Turn your LangGraph applications into production-ready APIs and Assistants with [LangGraph Cloud](https://langchain-ai.github.io/langgraph/cloud/).
+Corepack reads the `packageManager` field and selects the expected pnpm version.
 
-The LangChain libraries themselves are made up of several different packages.
-- **[`@langchain/core`](https://github.com/langchain-ai/langchainjs/blob/main/langchain-core)**: Base abstractions and LangChain Expression Language.
-- **[`@langchain/community`](https://github.com/langchain-ai/langchainjs/blob/main/libs/langchain-community)**: Third party integrations.
-- **[`langchain`](https://github.com/langchain-ai/langchainjs/blob/main/langchain)**: Chains, agents, and retrieval strategies that make up an application's cognitive architecture.
-- **[LangGraph.js](https://langchain-ai.github.io/langgraphjs/)**: LangGraph powers production-grade agents, trusted by Linkedin, Uber, Klarna, GitLab, and many more. Build robust and stateful multi-actor applications with LLMs by modeling steps as edges and nodes in a graph. Integrates smoothly with LangChain, but can be used without it.
+## Development
 
-Integrations may also be split into their own compatible packages.
+Run these commands from the repository root:
 
-![LangChain Stack](https://github.com/langchain-ai/langchainjs/blob/main/docs/core_docs/static/svg/langchain_stack_062024.svg)
+| Task | Command |
+| --- | --- |
+| Build all workspaces | `pnpm build` |
+| Run unit tests | `pnpm test` |
+| Run lint checks | `pnpm lint` |
+| Check formatting | `pnpm format:check` |
+| Apply formatting | `pnpm format` |
+| Remove generated build output | `pnpm clean` |
 
-This library aims to assist in the development of those types of applications. Common examples of these applications include:
+Before opening a pull request, run:
 
-**❓Question Answering over specific documents**
+```bash
+pnpm build
+pnpm lint
+pnpm test
+pnpm format:check
+```
 
-- [Documentation](https://js.langchain.com/docs/tutorials/rag/)
-- End-to-end Example: [Doc-Chatbot](https://github.com/dissorial/doc-chatbot)
+## Contributing
 
-**💬 Chatbots**
+Keep changes focused, add or update tests for behavior changes, and update documentation whenever setup steps, commands, public APIs, or user-visible behavior change.
 
-- [Documentation](https://js.langchain.com/docs/tutorials/chatbot)
-- End-to-end Example: [Chat-LangChain](https://github.com/langchain-ai/chat-langchain)
+## License
 
-## 🚀 How does LangChain help?
-
-The main value props of the LangChain libraries are:
-1. **Components**: composable tools and integrations for working with language models. Components are modular and easy-to-use, whether you are using the rest of the LangChain framework or not
-2. **Off-the-shelf chains**: built-in assemblages of components for accomplishing higher-level tasks
-
-Off-the-shelf chains make it easy to get started. Components make it easy to customize existing chains and build new ones. 
-
-Components fall into the following **modules**:
-
-**📃 Model I/O:**
-
-This includes prompt management, prompt optimization, a generic interface for all LLMs, and common utilities for working with LLMs.
-
-**📚 Retrieval:**
-
-Data Augmented Generation involves specific types of chains that first interact with an external data source to fetch data for use in the generation step. Examples include summarization of long pieces of text and question/answering over specific data sources.
-
-**🤖 Agents:**
-
-Agents allow an LLM autonomy over how a task is accomplished. Agents make decisions about which Actions to take, then take that Action, observe the result, and repeat until the task is complete. LangChain provides a [standard interface for agents](https://js.langchain.com/docs/concepts/#agents), along with [LangGraph.js](https://github.com/langchain-ai/langgraphjs/) for building custom agents.
-
-## 📖 Documentation
-
-Please see [here](https://js.langchain.com) for full documentation, which includes:
-
-- [Getting started](https://js.langchain.com/docs/introduction): installation, setting up the environment, simple examples
-- Overview of the [interfaces](https://js.langchain.com/docs/how_to/lcel_cheatsheet/), [modules](https://js.langchain.com/docs/concepts) and [integrations](https://js.langchain.com/docs/integrations/platforms/)
-- [Tutorial](https://js.langchain.com/docs/tutorials/) walkthroughs
-- [Reference](https://api.js.langchain.com): full API docs
-
-## 💁 Contributing
-
-As an open-source project in a rapidly developing field, we are extremely open to contributions, whether it be in the form of a new feature, improved infrastructure, or better documentation.
-
-For detailed information on how to contribute, see [here](https://github.com/langchain-ai/langchainjs/blob/main/CONTRIBUTING.md).
-
-Please report any security issues or concerns following our [security guidelines](https://github.com/langchain-ai/langchainjs/blob/main/SECURITY.md).
-
-## 🖇️ Relationship with Python LangChain
-
-This is built to integrate as seamlessly as possible with the [LangChain Python package](https://github.com/langchain-ai/langchain). Specifically, this means all objects (prompts, LLMs, chains, etc) are designed in a way where they can be serialized and shared between languages.
+This project is licensed under the [MIT License](./LICENSE).
