@@ -36,18 +36,18 @@ jobs:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "true"
     steps:
       - uses: actions/checkout@v4
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Install pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          cache: "pnpm"
       - name: Install dependencies
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
         # Running `test:unit:ci` from root will build first, however debugging
         # in CI is easier if we separate the build step from the test step.
       - name: Build LangChain Azure
-        run: yarn build
+        run: pnpm build
       - name: Test
-        run: yarn run test
+        run: pnpm run test

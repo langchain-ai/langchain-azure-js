@@ -5,18 +5,11 @@
     "node": ">=18"
   },
   "homepage": "https://github.com/langchain-ai/langchain-azure-js",
-  "workspaces": [
-    "langchain",
-    "langchain-core",
-    "libs/*",
-    "examples",
-    "docs/*"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/langchain-ai/langchain-azure-js.git"
   },
-  "packageManager": "yarn@3.5.1",
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
     "build": "turbo build --filter=\"!test-exports-*\"",
     "turbo:command": "turbo",
@@ -25,10 +18,10 @@
     "format:check": "turbo format:check --concurrency=50",
     "lint": "turbo lint --concurrency=50",
     "lint:fix": "turbo lint:fix --concurrency=50",
-    "test": "yarn test:unit",
+    "test": "pnpm test:unit",
     "test:unit": "turbo test --filter=\"!test-exports-*\" --filter=!examples --filter=!api_refs --filter=!core_docs --filter=!create-langchain-integration",
     "test:unit:ci": "turbo test:ci",
-    "test:int": "yarn run test:int:deps && turbo test:integration ; yarn run test:int:deps:down",
+    "test:int": "pnpm run test:int:deps && turbo test:integration ; pnpm run test:int:deps:down",
     "release": "node release_workspace.js --workspace"
   },
   "author": "LangChain",
@@ -44,24 +37,5 @@
     "semver": "^7.7.2",
     "turbo": "^1.13.3",
     "typescript": "~5.1.6"
-  },
-  "resolutions": {
-    "dpdm@^3.12.0": "patch:dpdm@npm%3A3.12.0#./.yarn/patches/dpdm-npm-3.12.0-0dfdd8e3b8.patch",
-    "langsmith": ">=0.5.19",
-    "lodash": ">=4.18.1",
-    "js-yaml": ">=4.1.1",
-    "semver": ">=7.5.2",
-    "rollup": ">=4.59.0",
-    "minimatch@^5.0.1": "5.1.8",
-    "minimatch@^9.0.3": "9.0.7",
-    "minimatch@9.0.3": "9.0.7",
-    "minimatch@^9.0.4": "9.0.7",
-    "glob@^10.2.2": "10.5.0",
-    "glob@^10.3.7": "10.5.0",
-    "glob@^10.3.10": "10.5.0",
-    "@octokit/plugin-paginate-rest@11.3.1": ">=11.4.1",
-    "brace-expansion@^2.0.1": "2.0.3",
-    "brace-expansion@^5.0.2": "5.0.5",
-    "tmp@^0.0.33": "0.2.4"
   }
 }
