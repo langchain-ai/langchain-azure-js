@@ -49,7 +49,7 @@
     "dpdm@^3.12.0": "patch:dpdm@npm%3A3.12.0#./.yarn/patches/dpdm-npm-3.12.0-0dfdd8e3b8.patch",
     "langsmith": ">=0.5.19",
     "lodash": ">=4.18.1",
-    "js-yaml": ">=4.1.1",
+    "js-yaml": ">=5.2.1",
     "semver": ">=7.5.2",
     "rollup": ">=4.59.0",
     "minimatch@^5.0.1": "5.1.8",
