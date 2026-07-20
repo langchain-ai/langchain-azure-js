@@ -3,9 +3,9 @@ packages:
 
 overrides:
   dpdm: "3.12.0"
-  langsmith: ">=0.5.19"
+  langsmith: ">=0.6.0"
   lodash: ">=4.18.1"
-  js-yaml: ">=4.1.1"
+  js-yaml: ">=5.2.1"
   semver: ">=7.5.2"
   rollup: ">=4.59.0"
   "minimatch@^5.0.1": "5.1.8"
@@ -17,8 +17,10 @@ overrides:
   "glob@^10.3.10": "10.5.0"
   "@octokit/plugin-paginate-rest@11.3.1": ">=11.4.1"
   "brace-expansion@^2.0.1": "2.0.3"
-  "brace-expansion@^5.0.2": "5.0.5"
-  "tmp@^0.0.33": "0.2.4"
+  "brace-expansion@^5.0.2": "5.0.6"
+  "socks@^2.8.3": "2.8.9"
+  "tmp@^0.0.33": "0.2.7"
+  "uuid@^10.0.0": "11.1.1"
 
 patchedDependencies:
   "dpdm@3.12.0": "patches/dpdm@3.12.0.patch"
