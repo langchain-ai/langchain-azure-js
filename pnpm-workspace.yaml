@@ -1,0 +1,17 @@
+packages:
+  - "langchain"
+  - "langchain-core"
+  - "libs/*"
+  - "examples"
+  - "docs/*"
+
+supportedArchitectures:
+  cpu:
+    - x64
+    - arm64
+  libc:
+    - glibc
+    - musl
+  os:
+    - darwin
+    - linux

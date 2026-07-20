@@ -5,7 +5,7 @@ name: CI
 
 on:
   pull_request:
-    paths_ignore:
+    paths-ignore:
       - 'docs/**'
       - 'dependency_range_tests/**'
       - 'environment_tests/**'
@@ -39,8 +39,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
-          cache: "yarn"
+          cache: "pnpm"
       - name: Install dependencies
-        run: yarn install --immutable --mode=skip-build
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Check linting
-        run: yarn run lint
+        run: pnpm run lint

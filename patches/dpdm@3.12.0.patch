@@ -27,7 +27,7 @@ index 6bc6fcc31e0da798e0f5bfc018f02243f48451b4..b609df15eb8584351f47d86849ed4190
              else if (ts.isCallExpression(node) &&
                  ts.isIdentifier(node.expression) &&
 diff --git a/src/parser.ts b/src/parser.ts
-index b4b2bb3e783224da78c6a8b80c2195da07daa246..b64197b52b1081fa59162dcb49356ef469c0d204 100644
+index b4b2bb3e783224da78c6a8b80c2195da07daa246..b64197d52b1081fa59162dcb49356ef469c0d204 100644
 --- a/src/parser.ts
 +++ b/src/parser.ts
 @@ -59,8 +59,7 @@ async function parseTreeRecursive(
