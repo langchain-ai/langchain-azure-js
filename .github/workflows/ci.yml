@@ -33,6 +33,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check lockfile portability and integrity
+        run: |
+          if grep -Eq '^[[:space:]]+.*tarball:' pnpm-lock.yaml; then
+            echo "pnpm-lock.yaml must not contain tarball URLs"
+            exit 1
+          fi
+          if grep -Eo 'integrity:[[:space:]]+[^,}]+' pnpm-lock.yaml | grep -Evq 'integrity:[[:space:]]+sha(256|512)-'; then
+            echo "pnpm-lock.yaml must use SHA-256 or SHA-512 integrity values"
+            exit 1
+          fi
       - name: Enable Corepack
         run: corepack enable
       - name: Use Node.js 20.x

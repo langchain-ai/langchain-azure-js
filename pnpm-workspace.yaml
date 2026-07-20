@@ -5,6 +5,8 @@ packages:
   - "examples"
   - "docs/*"
 
+lockfileIncludeTarballUrl: false
+
 supportedArchitectures:
   cpu:
     - x64
