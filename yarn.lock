@@ -2067,6 +2067,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"agent-base@npm:6":
+  version: 6.0.2
+  resolution: "agent-base@npm:6.0.2"
+  dependencies:
+    debug: 4
+  checksum: f52b6872cc96fd5f622071b71ef200e01c7c4c454ee68bc9accca90c98cfb39f2810e3e9aa330435835eedc8c23f4f8a15267f67c6e245d2b33757575bdac49d
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:^7.1.0, agent-base@npm:^7.1.2":
   version: 7.1.3
   resolution: "agent-base@npm:7.1.3"
@@ -2325,13 +2334,14 @@ __metadata:
   linkType: hard
 
 "axios@npm:^1.6.7":
-  version: 1.16.0
-  resolution: "axios@npm:1.16.0"
+  version: 1.18.1
+  resolution: "axios@npm:1.18.1"
   dependencies:
     follow-redirects: ^1.16.0
     form-data: ^4.0.5
+    https-proxy-agent: ^5.0.1
     proxy-from-env: ^2.1.0
-  checksum: 93e810968167fea59750d28f458e6860973a573c14bd60fe57ee07b5241f4c16991b149ae9ce65d79765081e3004743c9e158c438edba75af6f4612197e6834b
+  checksum: e7a0c1f73f3d17ef5c5b09259b6aae0c1d841fe3b4ef76964ac5aca97b1cf30724cdedb9a514ccc435682dc690f4486580c5babfe897fbcbd500627bd2e86f6d
   languageName: node
   linkType: hard
 
@@ -2497,6 +2507,7 @@ __metadata:
   resolution: "brace-expansion@npm:5.0.6"
   dependencies:
     balanced-match: ^4.0.2
+  checksum: b5a0e54a5d5f66d0acb88f297e1f3e74732f9c8a35ab6c87b96bd60f6e390697f099b747dd053b9017bd1a38225ff3f60632de09a723a99f2144740b7fbda66b
   languageName: node
   linkType: hard
 
@@ -4428,6 +4439,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"https-proxy-agent@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "https-proxy-agent@npm:5.0.1"
+  dependencies:
+    agent-base: 6
+    debug: 4
+  checksum: 571fccdf38184f05943e12d37d6ce38197becdd69e58d03f43637f7fa1269cf303a7d228aa27e5b27bbd3af8f09fd938e1c91dcfefff2df7ba77c20ed8dfc765
+  languageName: node
+  linkType: hard
+
 "https-proxy-agent@npm:^7.0.1, https-proxy-agent@npm:^7.0.6":
   version: 7.0.6
   resolution: "https-proxy-agent@npm:7.0.6"
@@ -4592,6 +4613,7 @@ __metadata:
 "ip-address@npm:^10.1.1":
   version: 10.1.1
   resolution: "ip-address@npm:10.1.1"
+  checksum: 4a370ba2708290b3f6381110097960e99a6d0a67aee5487562dd3bb3d600b9c5b5614c6b38d5143ee5103c4652922f53d47e5154209c332ca437fba7b8e7619f
   languageName: node
   linkType: hard
 
@@ -5738,6 +5760,7 @@ __metadata:
       optional: true
     ws:
       optional: true
+  checksum: f12965e73aef952fd5909a1bfbce5c7e906298947d481d3aa1faae044720c0ab3f85aea8d512a1ad8967b708eb60a7e4bd4c890aacd2f8cd2c772dcf8e2589f2
   languageName: node
   linkType: hard
 
@@ -7584,6 +7607,7 @@ __metadata:
   dependencies:
     ip-address: ^10.1.1
     smart-buffer: ^4.2.0
+  checksum: b573ed4cfb935624d3688e7065cd03fd72ca258156923c9ebb9d462e545cd78f296b64a0e36f911b16326c94aabe2bf94ff405f8afef27ac7bf80fa3c971c6f6
   languageName: node
   linkType: hard
 
@@ -7870,6 +7894,7 @@ __metadata:
 "tmp@npm:0.2.7":
   version: 0.2.7
   resolution: "tmp@npm:0.2.7"
+  checksum: 45dec2fc288ad368eeff7268cb6d5d33452c6d35f4f7d9b1b5e023409a141dab57a3c08b5f505daf3af6d69667a5f544fc1a5b6a27c6f9396a5a1b4002912f1c
   languageName: node
   linkType: hard
 
@@ -8290,6 +8315,7 @@ __metadata:
   resolution: "uuid@npm:11.1.1"
   bin:
     uuid: dist/esm/bin/uuid
+  checksum: 1c1ea6ffc9fd02a343d77151734af65644ebf5bac733b59bdab85859cf793cf03ac8d60909fa19dcd2272e154b20734c464b667afd8bdac02b4da5e206079469
   languageName: node
   linkType: hard
 
