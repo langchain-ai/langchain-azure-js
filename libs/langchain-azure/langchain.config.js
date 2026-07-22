@@ -13,6 +13,7 @@ export const config = {
   internals: [/node\:/, /@langchain\/core\//],
   entrypoints: {
     index: "index",
+    "agents/hosting": "agents/hosting/index",
   },
   requiresOptionalDependency: [],
   tsConfigPath: resolve("./tsconfig.json"),

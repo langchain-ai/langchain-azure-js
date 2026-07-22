@@ -900,23 +900,76 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/core@npm:^0.3.80":
-  version: 0.3.80
-  resolution: "@langchain/core@npm:0.3.80"
+"@langchain/core@npm:^1.1.0":
+  version: 1.2.3
+  resolution: "@langchain/core@npm:1.2.3"
   dependencies:
     "@cfworker/json-schema": ^4.0.2
-    ansi-styles: ^5.0.0
-    camelcase: 6
-    decamelize: 1.2.0
+    "@standard-schema/spec": ^1.1.0
     js-tiktoken: ^1.0.12
-    langsmith: ^0.3.67
+    langsmith: ">=0.5.0 <1.0.0"
     mustache: ^4.2.0
     p-queue: ^6.6.2
-    p-retry: 4
-    uuid: ^10.0.0
-    zod: ^3.25.32
-    zod-to-json-schema: ^3.22.3
-  checksum: b11dbcfff1f63b2db55d655867440cd69bd6bd4f21c7b0167e5eae2dcea37195a8243db93e024c8e3cddac5ac11e8771cf38b032788210eb28204e955424ea61
+    zod: ^3.25.76 || ^4
+  checksum: 00f144c913b86fcc03811ebfb6d940ad3f3ad34e10e671c1a746db20422866906fadb2a1b12c8046fae3bbfc51ddd8673408a1f27911de6706fe2e57bc718534
+  languageName: node
+  linkType: hard
+
+"@langchain/langgraph-checkpoint@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "@langchain/langgraph-checkpoint@npm:1.1.3"
+  peerDependencies:
+    "@langchain/core": ^1.1.48
+  checksum: d5661b67f72f4df6950c1c53033ffb931820135ce59469756aaebea7d069ec56376a60c0f040528d6fbd2573d51de5861085a648a416df51618d843e1e6de1d2
+  languageName: node
+  linkType: hard
+
+"@langchain/langgraph-sdk@npm:~1.9.26":
+  version: 1.9.28
+  resolution: "@langchain/langgraph-sdk@npm:1.9.28"
+  dependencies:
+    "@langchain/protocol": ^0.0.18
+    "@types/json-schema": ^7.0.15
+    p-queue: ^9.0.1
+    p-retry: ^7.1.1
+  peerDependencies:
+    "@langchain/core": ^1.1.48
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+    svelte: ^4.0.0 || ^5.0.0
+    vue: ^3.0.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+    svelte:
+      optional: true
+    vue:
+      optional: true
+  checksum: 7756bc61c0ad0db50394cba0c1f21d7f4987a3b29409189cd2de3f2dc9d4f4956964df6642202de67f1763e3594034a532299b8ca14f1068c90abbc849a45c25
+  languageName: node
+  linkType: hard
+
+"@langchain/langgraph@npm:^1.1.0":
+  version: 1.4.8
+  resolution: "@langchain/langgraph@npm:1.4.8"
+  dependencies:
+    "@langchain/langgraph-checkpoint": ^1.1.3
+    "@langchain/langgraph-sdk": ~1.9.26
+    "@langchain/protocol": ^0.0.18
+    "@standard-schema/spec": 1.1.0
+  peerDependencies:
+    "@langchain/core": ^1.1.48
+    zod: ^3.25.32 || ^4.2.0
+  checksum: f445c3b4c19f8969f05aacecf76c677690bf03ee192969b280933a749cd02e2f8704ea9c9d1fbb46e7474027fc6929731813b78e2983d285b9f8ea841ea4f4a0
+  languageName: node
+  linkType: hard
+
+"@langchain/protocol@npm:^0.0.18":
+  version: 0.0.18
+  resolution: "@langchain/protocol@npm:0.0.18"
+  checksum: 76f650a682724cd8c98a19d88d510a8c1b22ea0d6b8dafa823d19eee56bb45b2ea8df363878296348c8e0a7d248bad71c0c4b7f0c0b626c7ff95fdce47ddb846
   languageName: node
   linkType: hard
 
@@ -1504,6 +1557,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@standard-schema/spec@npm:1.1.0, @standard-schema/spec@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@standard-schema/spec@npm:1.1.0"
+  checksum: 6245ebef5e698bb04752a22e996a7cc40406a404d9f68a9d4e1a7a10f2422da287247508e7b495a2f32bb38f3d57b4daf2c9ab4bf22d9bca13e20a3dc5ec575e
+  languageName: node
+  linkType: hard
+
 "@swc/core-darwin-arm64@npm:1.11.13":
   version: 1.11.13
   resolution: "@swc/core-darwin-arm64@npm:1.11.13"
@@ -1843,6 +1903,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/json-schema@npm:^7.0.15":
+  version: 7.0.15
+  resolution: "@types/json-schema@npm:7.0.15::__archiveUrl=https%3A%2F%2Fms-feed-12.pkgs.visualstudio.com%2F1es-public%2F_packaging%2Fnpm-public%2Fnpm%2Fregistry%2F%40types%2Fjson-schema%2F-%2Fjson-schema-7.0.15.tgz"
+  checksum: 97ed0cb44d4070aecea772b7b2e2ed971e10c81ec87dd4ecc160322ffa55ff330dace1793489540e3e318d90942064bb697cc0f8989391797792d919737b3b98
+  languageName: node
+  linkType: hard
+
 "@types/json5@npm:^0.0.29":
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
@@ -1875,10 +1942,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/retry@npm:0.12.0":
-  version: 0.12.0
-  resolution: "@types/retry@npm:0.12.0"
-  checksum: 61a072c7639f6e8126588bf1eb1ce8835f2cb9c2aba795c4491cf6310e013267b0c8488039857c261c387e9728c1b43205099223f160bb6a76b4374f741b5603
+"@types/node@npm:^18.19.0":
+  version: 18.19.130
+  resolution: "@types/node@npm:18.19.130::__archiveUrl=https%3A%2F%2Fms-feed-25.pkgs.visualstudio.com%2F1es-public%2F_packaging%2Fnpm-public%2Fnpm%2Fregistry%2F%40types%2Fnode%2F-%2Fnode-18.19.130.tgz"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: b7032363581c416e721a88cffdc2b47662337cacd20f8294f5619a1abf79615c7fef1521964c2aa9d36ed6aae733e1a03e8c704661bd5a0c2f34b390f41ea395
   languageName: node
   linkType: hard
 
@@ -2497,6 +2566,7 @@ __metadata:
   resolution: "brace-expansion@npm:5.0.6"
   dependencies:
     balanced-match: ^4.0.2
+  checksum: b5a0e54a5d5f66d0acb88f297e1f3e74732f9c8a35ab6c87b96bd60f6e390697f099b747dd053b9017bd1a38225ff3f60632de09a723a99f2144740b7fbda66b
   languageName: node
   linkType: hard
 
@@ -2636,17 +2706,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"camelcase@npm:6, camelcase@npm:^6.2.0":
-  version: 6.3.0
-  resolution: "camelcase@npm:6.3.0"
-  checksum: 8c96818a9076434998511251dcb2761a94817ea17dbdc37f47ac080bd088fc62c7369429a19e2178b993497132c8cbcf5cc1f44ba963e76782ba469c0474938d
-  languageName: node
-  linkType: hard
-
 "camelcase@npm:^5.3.1":
   version: 5.3.1
   resolution: "camelcase@npm:5.3.1"
   checksum: e6effce26b9404e3c0f301498184f243811c30dfe6d0b9051863bd8e4034d09c8c2923794f280d6827e5aa055f6c434115ff97864a16a963366fb35fd673024b
+  languageName: node
+  linkType: hard
+
+"camelcase@npm:^6.2.0":
+  version: 6.3.0
+  resolution: "camelcase@npm:6.3.0"
+  checksum: 8c96818a9076434998511251dcb2761a94817ea17dbdc37f47ac080bd088fc62c7369429a19e2178b993497132c8cbcf5cc1f44ba963e76782ba469c0474938d
   languageName: node
   linkType: hard
 
@@ -3038,13 +3108,6 @@ __metadata:
   dependencies:
     ms: ^2.1.1
   checksum: b3d8c5940799914d30314b7c3304a43305fd0715581a919dacb8b3176d024a782062368405b47491516d2091d6462d4d11f2f4974a405048094f8bfebfa3071c
-  languageName: node
-  linkType: hard
-
-"decamelize@npm:1.2.0":
-  version: 1.2.0
-  resolution: "decamelize@npm:1.2.0"
-  checksum: ad8c51a7e7e0720c70ec2eeb1163b66da03e7616d7b98c9ef43cce2416395e84c1e9548dd94f5f6ffecfee9f8b94251fc57121a8b021f2ff2469b2bae247b8aa
   languageName: node
   linkType: hard
 
@@ -3743,6 +3806,13 @@ __metadata:
   version: 5.0.1
   resolution: "eventemitter3@npm:5.0.1"
   checksum: 543d6c858ab699303c3c32e0f0f47fc64d360bf73c3daf0ac0b5079710e340d6fe9f15487f94e66c629f5f82cd1a8678d692f3dbb6f6fcd1190e1b97fcad36f8
+  languageName: node
+  linkType: hard
+
+"eventemitter3@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "eventemitter3@npm:5.0.4"
+  checksum: bcbd2c3a9d2553c2289623ede8aab474d5c92bcbf18e5fe76f0e550c2b7801afb5a4351c7f11e8ee2379cca1ee48316aeb98fc3b946b7dd1f47a4c1ee8c4dcf2
   languageName: node
   linkType: hard
 
@@ -4592,6 +4662,7 @@ __metadata:
 "ip-address@npm:^10.1.1":
   version: 10.1.1
   resolution: "ip-address@npm:10.1.1"
+  checksum: 4a370ba2708290b3f6381110097960e99a6d0a67aee5487562dd3bb3d600b9c5b5614c6b38d5143ee5103c4652922f53d47e5154209c332ca437fba7b8e7619f
   languageName: node
   linkType: hard
 
@@ -4797,6 +4868,13 @@ __metadata:
   version: 2.0.3
   resolution: "is-map@npm:2.0.3"
   checksum: e6ce5f6380f32b141b3153e6ba9074892bbbbd655e92e7ba5ff195239777e767a976dcd4e22f864accaf30e53ebf961ab1995424aef91af68788f0591b7396cc
+  languageName: node
+  linkType: hard
+
+"is-network-error@npm:^1.1.0":
+  version: 1.3.2
+  resolution: "is-network-error@npm:1.3.2"
+  checksum: 6d5c0663f476acf7fd5894b5bdce14284aec6b595ad34484d430249b736372e46c345249fd1688bddb2c1380d72c28741838926d1d078264e37e779e970f9d93
   languageName: node
   linkType: hard
 
@@ -5689,11 +5767,13 @@ __metadata:
   resolution: "langchain-azure@workspace:libs/langchain-azure"
   dependencies:
     "@jest/globals": ^29.5.0
-    "@langchain/core": ^0.3.80
+    "@langchain/core": ^1.1.0
+    "@langchain/langgraph": ^1.1.0
     "@langchain/scripts": ">=0.1.0 <0.2.0"
     "@swc/core": ^1.3.90
     "@swc/jest": ^0.2.29
     "@tsconfig/recommended": ^1.0.3
+    "@types/node": ^18.19.0
     "@typescript-eslint/eslint-plugin": ^6.12.0
     "@typescript-eslint/parser": ^6.12.0
     dotenv: ^16.3.1
@@ -5711,8 +5791,9 @@ __metadata:
     rollup: ^4.59.0
     ts-jest: ^29.1.0
     typescript: <5.2.0
+    zod: ^4.2.0
   peerDependencies:
-    "@langchain/core": ">=0.3.0 <0.4.0"
+    "@langchain/core": ^1.1.0
   languageName: unknown
   linkType: soft
 
@@ -5738,6 +5819,7 @@ __metadata:
       optional: true
     ws:
       optional: true
+  checksum: f12965e73aef952fd5909a1bfbce5c7e906298947d481d3aa1faae044720c0ab3f85aea8d512a1ad8967b708eb60a7e4bd4c890aacd2f8cd2c772dcf8e2589f2
   languageName: node
   linkType: hard
 
@@ -6590,13 +6672,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-retry@npm:4":
-  version: 4.6.2
-  resolution: "p-retry@npm:4.6.2"
+"p-queue@npm:^9.0.1":
+  version: 9.3.3
+  resolution: "p-queue@npm:9.3.3"
   dependencies:
-    "@types/retry": 0.12.0
-    retry: ^0.13.1
-  checksum: 45c270bfddaffb4a895cea16cb760dcc72bdecb6cb45fef1971fa6ea2e91ddeafddefe01e444ac73e33b1b3d5d29fb0dd18a7effb294262437221ddc03ce0f2e
+    eventemitter3: ^5.0.4
+    p-timeout: ^7.0.0
+  checksum: d91c91378289988d8d04a001449186ed8abedf24884d12e53cd73a5bb0ea4104e6571705a543985e4a8e45a6ec2116057df2959673f6787c5f336108acda42cd
+  languageName: node
+  linkType: hard
+
+"p-retry@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "p-retry@npm:7.1.1"
+  dependencies:
+    is-network-error: ^1.1.0
+  checksum: ae5ac18118e16fcb968095e6aee4ca9f82398f14b061177e00eaa949f6a0752b73afb41680193b56870475213989ef8bb7eacbacde827383b7f460d2de485ff1
   languageName: node
   linkType: hard
 
@@ -6606,6 +6697,13 @@ __metadata:
   dependencies:
     p-finally: ^1.0.0
   checksum: 3dd0eaa048780a6f23e5855df3dd45c7beacff1f820476c1d0d1bcd6648e3298752ba2c877aa1c92f6453c7dd23faaf13d9f5149fc14c0598a142e2c5e8d649c
+  languageName: node
+  linkType: hard
+
+"p-timeout@npm:^7.0.0":
+  version: 7.0.1
+  resolution: "p-timeout@npm:7.0.1"
+  checksum: 696d5e3b46cd4f81e1c6ec37e8f8555e56441c3e5e98cff080f795edd423b1b0a42c4f113f7a0369842994e9c2ea017bf10b9101574f7e5a477c6638664be84d
   languageName: node
   linkType: hard
 
@@ -7172,7 +7270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"retry@npm:0.13.1, retry@npm:^0.13.1":
+"retry@npm:0.13.1":
   version: 0.13.1
   resolution: "retry@npm:0.13.1"
   checksum: 47c4d5be674f7c13eee4cfe927345023972197dbbdfba5d3af7e461d13b44de1bfd663bfc80d2f601f8ef3fc8164c16dd99655a221921954a65d044a2fc1233b
@@ -7584,6 +7682,7 @@ __metadata:
   dependencies:
     ip-address: ^10.1.1
     smart-buffer: ^4.2.0
+  checksum: b573ed4cfb935624d3688e7065cd03fd72ca258156923c9ebb9d462e545cd78f296b64a0e36f911b16326c94aabe2bf94ff405f8afef27ac7bf80fa3c971c6f6
   languageName: node
   linkType: hard
 
@@ -7870,6 +7969,7 @@ __metadata:
 "tmp@npm:0.2.7":
   version: 0.2.7
   resolution: "tmp@npm:0.2.7"
+  checksum: 45dec2fc288ad368eeff7268cb6d5d33452c6d35f4f7d9b1b5e023409a141dab57a3c08b5f505daf3af6d69667a5f544fc1a5b6a27c6f9396a5a1b4002912f1c
   languageName: node
   linkType: hard
 
@@ -8177,6 +8277,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5::__archiveUrl=https%3A%2F%2Fms-feed-2.pkgs.visualstudio.com%2F1es-public%2F_packaging%2Fnpm-public%2Fnpm%2Fregistry%2Fundici-types%2F-%2Fundici-types-5.26.5.tgz"
+  checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
+  languageName: node
+  linkType: hard
+
 "undici-types@npm:~6.20.0":
   version: 6.20.0
   resolution: "undici-types@npm:6.20.0"
@@ -8282,14 +8389,6 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
-  languageName: node
-  linkType: hard
-
-"uuid@npm:11.1.1":
-  version: 11.1.1
-  resolution: "uuid@npm:11.1.1"
-  bin:
-    uuid: dist/esm/bin/uuid
   languageName: node
   linkType: hard
 
@@ -8583,18 +8682,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-to-json-schema@npm:^3.22.3":
-  version: 3.24.5
-  resolution: "zod-to-json-schema@npm:3.24.5"
-  peerDependencies:
-    zod: ^3.24.1
-  checksum: dc4e5e4c06e9a5494e4b1d8c8363ac907f9d488f36c8e4923e1e5ac4f91f737722f99200cd92a409551e7456d960734d4cabd37935234ca95e290572468ffc08
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.25.32":
-  version: 3.25.76
-  resolution: "zod@npm:3.25.76"
-  checksum: c9a403a62b329188a5f6bd24d5d935d2bba345f7ab8151d1baa1505b5da9f227fb139354b043711490c798e91f3df75991395e40142e6510a4b16409f302b849
+"zod@npm:^3.25.76 || ^4, zod@npm:^4.2.0":
+  version: 4.4.3
+  resolution: "zod@npm:4.4.3"
+  checksum: bf236fdee7a5a5ec645eef5bfea3aad34e7df912931c2a23bc17e5b59882482751da42392916529da52ff9bc70f584797a5d496f1fb81f2d1a4c90fdd3922d2a
   languageName: node
   linkType: hard
