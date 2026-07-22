@@ -270,7 +270,7 @@ describe("ResponsesHostServer", () => {
     ]);
   });
 
-  test("runs a real LangGraph 0.4.9 MessagesAnnotation graph", async () => {
+  test("runs a real LangGraph MessagesAnnotation graph", async () => {
     const graph = new StateGraph(MessagesAnnotation)
       .addNode("echo", (state) => {
         const last = state.messages[state.messages.length - 1];

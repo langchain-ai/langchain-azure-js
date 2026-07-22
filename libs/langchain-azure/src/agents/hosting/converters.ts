@@ -9,8 +9,8 @@ import {
   isBaseMessage,
   isToolMessage,
   type BaseMessage,
+  type ContentBlock,
   type MessageContent,
-  type MessageContentComplex,
 } from "@langchain/core/messages";
 
 import type {
@@ -241,7 +241,7 @@ function contentPartsToMessageContent(
     return parts.map((part) => part.text ?? "").join("");
   }
 
-  const content: MessageContentComplex[] = [];
+  const content: ContentBlock[] = [];
   for (const part of parts) {
     if (
       (part.type === "input_text" ||
