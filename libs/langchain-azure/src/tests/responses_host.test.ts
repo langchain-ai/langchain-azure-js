@@ -95,6 +95,148 @@ describe("ResponsesHostServer", () => {
     ).toBe("Hello, world!");
   });
 
+  test("retains usage from streamed message chunks", async () => {
+    const runnable: ResponsesRunnable = {
+      invoke: async () => ({ messages: [] }),
+      stream: async () =>
+        generate([
+          [
+            "messages",
+            [
+              new AIMessageChunk({
+                content: "Hello",
+                usage_metadata: {
+                  input_tokens: 2,
+                  output_tokens: 1,
+                  total_tokens: 3,
+                  input_token_details: { cache_read: 1 },
+                  output_token_details: { reasoning: 1 },
+                },
+              }),
+              {},
+            ],
+          ],
+        ]),
+    };
+    const server = await startServer(runnable);
+
+    const response = await fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input: "ignored", stream: true }),
+    });
+    const completed = parseSse(await response.text()).find(
+      (event) => event.type === "response.completed"
+    );
+
+    expect((completed?.response as ResponseObject).usage).toEqual({
+      input_tokens: 2,
+      input_tokens_details: { cached_tokens: 1 },
+      output_tokens: 1,
+      output_tokens_details: { reasoning_tokens: 1 },
+      total_tokens: 3,
+    });
+  });
+
+  test("uses final stream values to complete update output", async () => {
+    const functionCall = new AIMessage({
+      content: "",
+      tool_calls: [
+        { id: "call_lookup", name: "lookup", args: { query: "x" } },
+      ],
+    });
+    const runnable: ResponsesRunnable = {
+      invoke: async () => ({ messages: [] }),
+      stream: async () =>
+        generate([
+          ["updates", { agent: { messages: [functionCall] } }],
+          [
+            "values",
+            {
+              messages: [
+                functionCall,
+                new ToolMessage({
+                  content: "found",
+                  tool_call_id: "call_lookup",
+                }),
+                new AIMessage("Done"),
+              ],
+            },
+          ],
+        ]),
+    };
+    const server = await startServer(runnable);
+
+    const response = await fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input: "lookup", stream: true }),
+    });
+    const completed = parseSse(await response.text()).find(
+      (event) => event.type === "response.completed"
+    );
+    const completedResponse = completed?.response as ResponseObject;
+
+    expect(completedResponse.output.map((item) => item.type)).toEqual([
+      "function_call",
+      "function_call_output",
+      "message",
+    ]);
+    expect(messageText(completedResponse)).toBe("Done");
+  });
+
+  test("preserves separate reasoning summary parts from updates", async () => {
+    const runnable: ResponsesRunnable = {
+      invoke: async () => ({ messages: [] }),
+      stream: async () =>
+        generate([
+          [
+            "updates",
+            {
+              agent: {
+                messages: [
+                  new AIMessage({
+                    content: [
+                      {
+                        type: "reasoning",
+                        summary: [
+                          { type: "summary_text", text: "First" },
+                          { type: "summary_text", text: "Second" },
+                        ],
+                      },
+                    ],
+                  }),
+                ],
+              },
+            },
+          ],
+        ]),
+    };
+    const server = await startServer(runnable);
+
+    const response = await fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input: "reason", stream: true }),
+    });
+    const events = parseSse(await response.text());
+    const addedParts = events.filter(
+      (event) => event.type === "response.reasoning_summary_part.added"
+    );
+    const completed = events.find(
+      (event) => event.type === "response.completed"
+    );
+    const reasoning = (completed?.response as ResponseObject).output.find(
+      (item) => item.type === "reasoning"
+    );
+
+    expect(addedParts.map((event) => event.summary_index)).toEqual([0, 1]);
+    expect(reasoning?.type === "reasoning" ? reasoning.summary : []).toEqual([
+      { type: "summary_text", text: "First" },
+      { type: "summary_text", text: "Second" },
+    ]);
+  });
+
   test("lists normalized input items with pagination metadata", async () => {
     const server = await startServer(createEchoRunnable());
     const create = await fetch(`${server.url}/responses`, {
@@ -411,7 +553,8 @@ describe("ResponsesHostServer", () => {
   });
 
   test("rejects unsupported background and malformed input requests", async () => {
-    const server = await startServer(createEchoRunnable());
+    const receivedInputs: ResponsesGraphInput[] = [];
+    const server = await startServer(createEchoRunnable(receivedInputs));
 
     const background = await fetch(`${server.url}/responses`, {
       method: "POST",
@@ -429,6 +572,34 @@ describe("ResponsesHostServer", () => {
     expect(await malformed.json()).toMatchObject({
       error: { code: "unsupported_input_item" },
     });
+
+    const invalidArguments = await fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: [
+          {
+            type: "function_call",
+            call_id: "call_lookup",
+            name: "lookup",
+            arguments: "not-json",
+          },
+          {
+            type: "function_call_output",
+            call_id: "call_lookup",
+            output: "found",
+          },
+        ],
+      }),
+    });
+    expect(invalidArguments.status).toBe(400);
+    expect(await invalidArguments.json()).toMatchObject({
+      error: {
+        code: "invalid_request",
+        param: "input[0].arguments",
+      },
+    });
+    expect(receivedInputs).toHaveLength(0);
   });
 
   test("does not persist responses when store is false", async () => {

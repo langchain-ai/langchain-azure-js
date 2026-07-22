@@ -22,6 +22,7 @@ import type {
   ResponseMessageItem,
   ResponseObject,
   ResponseReasoningItem,
+  ResponseUsage,
   ResponsesStreamEvent,
 } from "./types.js";
 
@@ -48,6 +49,8 @@ export class ResponseStreamBuilder {
   private readonly observedMessages: BaseMessage[] = [];
 
   private finalValue: unknown;
+
+  private streamedUsage: ResponseUsage | null = null;
 
   private hasTextOutput = false;
 
@@ -102,10 +105,12 @@ export class ResponseStreamBuilder {
 
   complete(inputMessages: BaseMessage[]): ResponsesStreamEvent[] {
     const events = this.closeOpenItems();
+    const finalMessages = extractGeneratedMessages(
+      this.finalValue,
+      inputMessages
+    );
     const fallbackMessages =
-      this.observedMessages.length > 0
-        ? this.observedMessages
-        : extractGeneratedMessages(this.finalValue, inputMessages);
+      finalMessages.length > 0 ? finalMessages : this.observedMessages;
     events.push(...this.emitFallbackMessages(fallbackMessages));
     this.response.status = "completed";
     this.response.error = null;
@@ -152,6 +157,13 @@ export class ResponseStreamBuilder {
       !isAIMessageChunk(candidate)
     ) {
       return [];
+    }
+
+    if (candidate.usage_metadata !== undefined) {
+      this.streamedUsage = mergeUsage(
+        this.streamedUsage,
+        candidate.usage_metadata
+      );
     }
 
     const events: ResponsesStreamEvent[] = [];
@@ -206,7 +218,7 @@ export class ResponseStreamBuilder {
     const emitText = !this.hasTextOutput;
     const emitReasoning = !this.hasReasoningOutput;
     const converted = messagesToResponseOutput(messages);
-    this.response.usage = converted.usage;
+    this.response.usage = converted.usage ?? this.streamedUsage;
 
     for (const item of converted.output) {
       if (item.type === "message") {
@@ -254,13 +266,74 @@ export class ResponseStreamBuilder {
   private emitCompletedReasoning(
     item: ResponseReasoningItem
   ): ResponsesStreamEvent[] {
-    const events: ResponsesStreamEvent[] = [];
-    for (const part of item.summary) {
-      if (typeof part.text === "string") {
-        events.push(...this.emitReasoningDelta(part.text, item.id));
-      }
+    const parts = item.summary.flatMap((part) => {
+      const { text } = part;
+      return typeof text === "string" && text.length > 0
+        ? [{ ...part, text }]
+        : [];
+    });
+    if (parts.length === 0) {
+      return [];
     }
-    events.push(...this.closeReasoningItem());
+
+    const events: ResponsesStreamEvent[] = [];
+    const streamedItem: ResponseReasoningItem = {
+      ...item,
+      status: "in_progress",
+      summary: [],
+    };
+    const outputIndex = this.response.output.length;
+    this.response.output.push(streamedItem);
+    this.hasReasoningOutput = true;
+    events.push(
+      this.event("response.output_item.added", {
+        output_index: outputIndex,
+        item: structuredClone(streamedItem),
+      })
+    );
+
+    for (const part of parts) {
+      const summaryIndex = streamedItem.summary.length;
+      const streamedPart = { ...part, text: "" };
+      streamedItem.summary.push(streamedPart);
+      events.push(
+        this.event("response.reasoning_summary_part.added", {
+          item_id: streamedItem.id,
+          output_index: outputIndex,
+          summary_index: summaryIndex,
+          part: structuredClone(streamedPart),
+        }),
+        this.event("response.reasoning_summary_text.delta", {
+          item_id: streamedItem.id,
+          output_index: outputIndex,
+          summary_index: summaryIndex,
+          delta: part.text,
+        })
+      );
+      streamedPart.text = part.text;
+      events.push(
+        this.event("response.reasoning_summary_text.done", {
+          item_id: streamedItem.id,
+          output_index: outputIndex,
+          summary_index: summaryIndex,
+          text: part.text,
+        }),
+        this.event("response.reasoning_summary_part.done", {
+          item_id: streamedItem.id,
+          output_index: outputIndex,
+          summary_index: summaryIndex,
+          part: structuredClone(streamedPart),
+        })
+      );
+    }
+
+    streamedItem.status = "completed";
+    events.push(
+      this.event("response.output_item.done", {
+        output_index: outputIndex,
+        item: structuredClone(streamedItem),
+      })
+    );
     return events;
   }
 
@@ -579,4 +652,41 @@ function extractUpdateMessages(payload: unknown): BaseMessage[] {
     messages.push(...extractMessages(value));
   }
   return messages;
+}
+
+function mergeUsage(
+  current: ResponseUsage | null,
+  usage: {
+    input_tokens: number;
+    output_tokens: number;
+    total_tokens: number;
+    input_token_details?: { cache_read?: number };
+    output_token_details?: { reasoning?: number };
+  }
+): ResponseUsage {
+  const previous =
+    current ??
+    ({
+      input_tokens: 0,
+      input_tokens_details: { cached_tokens: 0 },
+      output_tokens: 0,
+      output_tokens_details: { reasoning_tokens: 0 },
+      total_tokens: 0,
+    } satisfies ResponseUsage);
+
+  return {
+    input_tokens: previous.input_tokens + usage.input_tokens,
+    input_tokens_details: {
+      cached_tokens:
+        previous.input_tokens_details.cached_tokens +
+        (usage.input_token_details?.cache_read ?? 0),
+    },
+    output_tokens: previous.output_tokens + usage.output_tokens,
+    output_tokens_details: {
+      reasoning_tokens:
+        previous.output_tokens_details.reasoning_tokens +
+        (usage.output_token_details?.reasoning ?? 0),
+    },
+    total_tokens: previous.total_tokens + usage.total_tokens,
+  };
 }

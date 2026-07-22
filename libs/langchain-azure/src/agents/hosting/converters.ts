@@ -95,13 +95,15 @@ function normalizeInputItem(item: unknown, index: number): ResponseInputItem {
   if (type === "function_call") {
     const callId = requiredString(item.call_id, `input[${index}].call_id`);
     const name = requiredString(item.name, `input[${index}].name`);
+    const argumentsJson = normalizeJsonString(item.arguments);
+    parseArguments(argumentsJson, `input[${index}].arguments`);
     return {
       id: optionalString(item.id) ?? createItemId("fc"),
       type: "function_call",
       status: "completed",
       call_id: callId,
       name,
-      arguments: normalizeJsonString(item.arguments),
+      arguments: argumentsJson,
     };
   }
 
@@ -498,16 +500,25 @@ function mergeUsage(
   };
 }
 
-function parseArguments(value: string): Record<string, unknown> {
+function parseArguments(
+  value: string,
+  param = "arguments"
+): Record<string, unknown> {
   if (!value) {
     return {};
   }
   try {
     const parsed: unknown = JSON.parse(value);
-    return isRecord(parsed) ? parsed : {};
+    if (isRecord(parsed)) {
+      return parsed;
+    }
   } catch {
-    return {};
+    // Handled by the validation error below.
   }
+  throw new ResponsesValidationError(
+    `'${param}' must contain a JSON object.`,
+    param
+  );
 }
 
 function normalizeJsonString(value: unknown): string {
