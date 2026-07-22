@@ -37,10 +37,12 @@
   "devDependencies": {
     "@jest/globals": "^29.5.0",
     "@langchain/core": "^0.3.80",
+    "@langchain/langgraph": "0.4.9",
     "@langchain/scripts": ">=0.1.0 <0.2.0",
     "@swc/core": "^1.3.90",
     "@swc/jest": "^0.2.29",
     "@tsconfig/recommended": "^1.0.3",
+    "@types/node": "^18.19.0",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "dotenv": "^16.3.1",
@@ -72,6 +74,15 @@
       "import": "./index.js",
       "require": "./index.cjs"
     },
+    "./agents/hosting": {
+      "types": {
+        "import": "./agents/hosting.d.ts",
+        "require": "./agents/hosting.d.cts",
+        "default": "./agents/hosting.d.ts"
+      },
+      "import": "./agents/hosting.js",
+      "require": "./agents/hosting.cjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -79,6 +90,10 @@
     "index.cjs",
     "index.js",
     "index.d.ts",
-    "index.d.cts"
+    "index.d.cts",
+    "agents/hosting.cjs",
+    "agents/hosting.js",
+    "agents/hosting.d.ts",
+    "agents/hosting.d.cts"
   ]
 }
