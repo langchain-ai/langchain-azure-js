@@ -60,8 +60,11 @@ export class InMemoryResponseStore {
     if (this.records.has(record.response.id)) {
       throw new Error(`Response '${record.response.id}' already exists.`);
     }
-    if (this.records.size >= this.maxRecords) {
-      this.evictOldestTerminalRecord();
+    if (
+      this.records.size >= this.maxRecords &&
+      record.request.store !== false
+    ) {
+      this.evictOldestTerminalRecord(record);
     }
     if (this.records.size >= this.maxRecords) {
       throw new ResponseStoreCapacityError(this.maxRecords);
@@ -128,23 +131,53 @@ export class InMemoryResponseStore {
 
   private pruneExpired(): void {
     const now = this.now();
+    const retainedRecords = [...this.records.values()]
+      .filter(
+        (entry) =>
+          entry.expiresAt > now ||
+          entry.record.response.status === "in_progress"
+      )
+      .map(({ record }) => record);
+    const protectedIds = this.collectAncestorIds(retainedRecords);
     for (const [responseId, entry] of this.records) {
       if (
         entry.expiresAt <= now &&
-        entry.record.response.status !== "in_progress"
+        entry.record.response.status !== "in_progress" &&
+        !protectedIds.has(responseId)
       ) {
         this.records.delete(responseId);
       }
     }
   }
 
-  private evictOldestTerminalRecord(): void {
+  private evictOldestTerminalRecord(incoming: StoredResponse): void {
+    const protectedIds = this.collectAncestorIds([
+      ...[...this.records.values()].map(({ record }) => record),
+      incoming,
+    ]);
     for (const [responseId, entry] of this.records) {
-      if (entry.record.response.status !== "in_progress") {
+      if (
+        entry.record.response.status !== "in_progress" &&
+        !protectedIds.has(responseId)
+      ) {
         this.records.delete(responseId);
         return;
       }
     }
+  }
+
+  private collectAncestorIds(records: StoredResponse[]): Set<string> {
+    const ancestors = new Set<string>();
+    for (const record of records) {
+      let currentId = record.response.previous_response_id;
+      while (currentId !== null && !ancestors.has(currentId)) {
+        ancestors.add(currentId);
+        currentId =
+          this.records.get(currentId)?.record.response.previous_response_id ??
+          null;
+      }
+    }
+    return ancestors;
   }
 }
 

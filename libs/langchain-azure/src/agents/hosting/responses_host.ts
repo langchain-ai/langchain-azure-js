@@ -223,11 +223,14 @@ export class ResponsesHostServer {
     }
 
     const inputItems = normalizeResponseInput(createRequest.input);
-    this.validatePreviousResponse(createRequest.previous_response_id);
+    const previousChain = this.validatePreviousResponse(
+      createRequest.previous_response_id
+    );
 
     const responseObject = createResponseObject(
       createRequest,
-      this.defaultModel
+      this.defaultModel,
+      findLatestConversationId(previousChain)
     );
     const record: StoredResponse = {
       request: createRequest,
@@ -248,29 +251,27 @@ export class ResponsesHostServer {
       throw error;
     }
 
-    if (createRequest.stream === true) {
-      const onClose = () => {
-        if (
-          !response.writableEnded &&
-          record.response.status === "in_progress"
-        ) {
-          record.abortController.abort();
-        }
-      };
-      response.once("close", onClose);
-      try {
-        await this.executeStreaming(record, response);
-      } finally {
-        response.off("close", onClose);
-        this.deleteEphemeralResponse(record);
+    const onClose = () => {
+      if (!response.writableEnded && record.response.status === "in_progress") {
+        record.abortController.abort();
       }
-      return;
-    }
+    };
+    response.once("close", onClose);
+    try {
+      if (createRequest.stream === true) {
+        await this.executeStreaming(record, response);
+        return;
+      }
 
-    await this.executeNonStreaming(record);
-    const statusCode = record.response.status === "failed" ? 500 : 200;
-    sendJson(response, statusCode, structuredClone(record.response));
-    this.deleteEphemeralResponse(record);
+      await this.executeNonStreaming(record);
+      if (!response.destroyed && !response.writableEnded) {
+        const statusCode = record.response.status === "failed" ? 500 : 200;
+        sendJson(response, statusCode, structuredClone(record.response));
+      }
+    } finally {
+      response.off("close", onClose);
+      this.deleteEphemeralResponse(record);
+    }
   }
 
   private handleGet(responseId: string, response: ServerResponse): void {
@@ -451,7 +452,8 @@ export class ResponsesHostServer {
       | ResponseInputItem
       | (typeof record.response.output)[number]
     )[] = [];
-    if (!this.usesCheckpointer()) {
+    const usesCheckpointer = this.usesCheckpointer();
+    if (!usesCheckpointer) {
       const history = this.getHistory(record);
       for (const previous of history) {
         items.push(...previous.inputItems, ...previous.response.output);
@@ -459,7 +461,9 @@ export class ResponsesHostServer {
     }
     items.push(...record.inputItems);
 
-    const messages = responseItemsToMessages(items);
+    const messages = responseItemsToMessages(items, {
+      allowUnmatchedToolOutputs: usesCheckpointer,
+    });
     if (record.request.instructions) {
       messages.unshift(new SystemMessage(record.request.instructions));
     }
@@ -484,7 +488,7 @@ export class ResponsesHostServer {
   private getHistory(record: StoredResponse): StoredResponse[] {
     const previousResponseId = record.response.previous_response_id;
     if (previousResponseId !== null) {
-      return this.store.getResponseChain(previousResponseId) ?? [];
+      return this.requireResponseChain(previousResponseId);
     }
     const conversationId = record.response.conversation?.id;
     return conversationId === undefined
@@ -499,11 +503,8 @@ export class ResponsesHostServer {
     }
     const previousResponseId = record.response.previous_response_id;
     if (previousResponseId !== null) {
-      const chain = this.store.getResponseChain(previousResponseId);
-      if (chain?.length) {
-        return `resp-${chain[0].response.id}`;
-      }
-      return `resp-${previousResponseId}`;
+      const chain = this.requireResponseChain(previousResponseId);
+      return `resp-${chain[0].response.id}`;
     }
     return `resp-${record.response.id}`;
   }
@@ -518,9 +519,9 @@ export class ResponsesHostServer {
 
   private validatePreviousResponse(
     previousResponseId: string | null | undefined
-  ): void {
+  ): StoredResponse[] | undefined {
     if (previousResponseId === undefined || previousResponseId === null) {
-      return;
+      return undefined;
     }
     const previous = this.store.get(previousResponseId);
     if (previous === undefined) {
@@ -539,6 +540,20 @@ export class ResponsesHostServer {
         "previous_response_id"
       );
     }
+    return this.requireResponseChain(previousResponseId);
+  }
+
+  private requireResponseChain(responseId: string): StoredResponse[] {
+    const chain = this.store.getResponseChain(responseId);
+    if (chain === undefined) {
+      throw new ResponsesHttpError(
+        409,
+        `Response chain for '${responseId}' is incomplete.`,
+        "response_chain_incomplete",
+        "previous_response_id"
+      );
+    }
+    return chain;
   }
 
   private requireResponse(responseId: string): StoredResponse {
@@ -654,12 +669,13 @@ export class ResponsesHostServer {
 
 function createResponseObject(
   request: CreateResponseRequest,
-  defaultModel: string
+  defaultModel: string,
+  inheritedConversationId?: string
 ): ResponseObject {
   const conversationId =
     typeof request.conversation === "string"
       ? request.conversation
-      : request.conversation?.id;
+      : request.conversation?.id ?? inheritedConversationId;
   return {
     id: `resp_${randomUUID().replace(/-/g, "")}`,
     object: "response",
@@ -686,6 +702,21 @@ function createResponseObject(
     truncation: request.truncation ?? "disabled",
     usage: null,
   };
+}
+
+function findLatestConversationId(
+  records: StoredResponse[] | undefined
+): string | undefined {
+  if (records === undefined) {
+    return undefined;
+  }
+  for (let index = records.length - 1; index >= 0; index -= 1) {
+    const conversationId = records[index].response.conversation?.id;
+    if (conversationId !== undefined) {
+      return conversationId;
+    }
+  }
+  return undefined;
 }
 
 function parseCreateRequest(value: unknown): CreateResponseRequest {

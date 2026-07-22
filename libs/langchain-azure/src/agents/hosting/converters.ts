@@ -186,7 +186,14 @@ function createMessageItem(
   };
 }
 
-export function responseItemsToMessages(items: ResponseItem[]): BaseMessage[] {
+export interface ResponseItemsToMessagesOptions {
+  allowUnmatchedToolOutputs?: boolean;
+}
+
+export function responseItemsToMessages(
+  items: ResponseItem[],
+  options: ResponseItemsToMessagesOptions = {}
+): BaseMessage[] {
   const messages: BaseMessage[] = [];
   let index = 0;
 
@@ -231,7 +238,10 @@ export function responseItemsToMessages(items: ResponseItem[]): BaseMessage[] {
     index += 1;
   }
 
-  return filterIncompleteToolCalls(messages);
+  return filterIncompleteToolCalls(
+    messages,
+    options.allowUnmatchedToolOutputs ?? false
+  );
 }
 
 function contentPartsToMessageContent(
@@ -262,7 +272,10 @@ function contentPartsToMessageContent(
   return content;
 }
 
-function filterIncompleteToolCalls(messages: BaseMessage[]): BaseMessage[] {
+function filterIncompleteToolCalls(
+  messages: BaseMessage[],
+  allowUnmatchedToolOutputs: boolean
+): BaseMessage[] {
   const responseIds = new Set(
     messages
       .filter(isToolMessage)
@@ -286,7 +299,7 @@ function filterIncompleteToolCalls(messages: BaseMessage[]): BaseMessage[] {
       callIds.forEach((id) => validCallIds.add(id));
       result.push(message);
     } else if (isToolMessage(message)) {
-      if (validCallIds.has(message.tool_call_id)) {
+      if (allowUnmatchedToolOutputs || validCallIds.has(message.tool_call_id)) {
         result.push(message);
       }
     } else {

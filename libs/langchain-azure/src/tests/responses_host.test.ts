@@ -152,6 +152,77 @@ describe("ResponsesHostServer", () => {
     ).toEqual(["one", "Echo: one", "two"]);
   });
 
+  test("passes standalone tool outputs to checkpointed graphs", async () => {
+    const receivedInputs: ResponsesGraphInput[] = [];
+    let invocation = 0;
+    const runnable: ResponsesRunnable = {
+      checkpointer: {},
+      invoke: async (input) => {
+        receivedInputs.push(input);
+        invocation += 1;
+        if (invocation === 1) {
+          return {
+            messages: [
+              ...input.messages,
+              new AIMessage({
+                content: "",
+                tool_calls: [
+                  { id: "call_lookup", name: "lookup", args: { q: "x" } },
+                ],
+              }),
+            ],
+          };
+        }
+        return { messages: input.messages };
+      },
+      stream: async () => generate([]),
+    };
+    const server = await startServer(runnable);
+    const first = await createResponse(server.url, { input: "look it up" });
+
+    await createResponse(server.url, {
+      input: [
+        {
+          type: "function_call_output",
+          call_id: "call_lookup",
+          output: "found",
+        },
+      ],
+      previous_response_id: first.id,
+    });
+
+    expect(receivedInputs[1].messages).toHaveLength(1);
+    expect(receivedInputs[1].messages[0]).toBeInstanceOf(ToolMessage);
+    expect((receivedInputs[1].messages[0] as ToolMessage).tool_call_id).toBe(
+      "call_lookup"
+    );
+  });
+
+  test("inherits checkpoint threads from previous response conversations", async () => {
+    const threadIds: unknown[] = [];
+    const runnable: ResponsesRunnable = {
+      checkpointer: {},
+      invoke: async (input, config) => {
+        threadIds.push(config?.configurable?.thread_id);
+        return { messages: [...input.messages, new AIMessage("ok")] };
+      },
+      stream: async () => generate([]),
+    };
+    const server = await startServer(runnable);
+    const first = await createResponse(server.url, {
+      input: "one",
+      conversation: "conv_1",
+    });
+
+    const second = await createResponse(server.url, {
+      input: "two",
+      previous_response_id: first.id,
+    });
+
+    expect(threadIds).toEqual(["conv_1", "conv_1"]);
+    expect(second.conversation).toEqual({ id: "conv_1" });
+  });
+
   test("cancels an active stream and persists cancelled status", async () => {
     const runnable: ResponsesRunnable = {
       invoke: async () => ({ messages: [] }),
@@ -183,6 +254,42 @@ describe("ResponsesHostServer", () => {
       status: "cancelled",
       error: { code: "cancelled" },
     });
+  });
+
+  test("cancels non-streaming work when the client disconnects", async () => {
+    let invocationSignal: AbortSignal | undefined;
+    let finishInvocation: ((value: unknown) => void) | undefined;
+    const invocationResult = new Promise<unknown>((resolve) => {
+      finishInvocation = resolve;
+    });
+    const runnable: ResponsesRunnable = {
+      invoke: async (_input, config) => {
+        invocationSignal = config?.signal;
+        return invocationResult;
+      },
+      stream: async () => generate([]),
+    };
+    const server = await startServer(runnable);
+    const controller = new AbortController();
+    const pendingRequest = fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input: "wait" }),
+      signal: controller.signal,
+    }).catch((error: unknown) => error);
+    await waitFor(() => invocationSignal !== undefined);
+
+    controller.abort();
+    await pendingRequest;
+    await waitFor(
+      () =>
+        invocationSignal?.aborted === true &&
+        server.instance.store.values()[0]?.response.status === "cancelled"
+    );
+
+    expect(invocationSignal?.aborted).toBe(true);
+    expect(server.instance.store.values()[0].response.status).toBe("cancelled");
+    finishInvocation?.({ messages: [] });
   });
 
   test("deletes responses and returns OpenAI-style not-found errors", async () => {
@@ -364,6 +471,99 @@ describe("ResponsesHostServer", () => {
         (response) => response.status
       )
     ).toBe(404);
+  });
+
+  test("does not evict response-chain ancestors at capacity", async () => {
+    const store = new InMemoryResponseStore({
+      maxRecords: 2,
+      ttlMs: 60_000,
+    });
+    const server = await startServer(createEchoRunnable(), { store });
+    const first = await createResponse(server.url, { input: "first" });
+    const second = await createResponse(server.url, {
+      input: "second",
+      previous_response_id: first.id,
+    });
+
+    const full = await fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: "third",
+        previous_response_id: second.id,
+      }),
+    });
+
+    expect(full.status).toBe(503);
+    expect(
+      store.getResponseChain(second.id)?.map(({ response }) => response.id)
+    ).toEqual([first.id, second.id]);
+  });
+
+  test("retains expired ancestors while response-chain descendants are live", async () => {
+    let now = 0;
+    const store = new InMemoryResponseStore({
+      maxRecords: 3,
+      ttlMs: 10,
+      now: () => now,
+    });
+    const server = await startServer(createEchoRunnable(), { store });
+    const first = await createResponse(server.url, { input: "first" });
+    now = 5;
+    const second = await createResponse(server.url, {
+      input: "second",
+      previous_response_id: first.id,
+    });
+
+    now = 11;
+    expect(
+      store.getResponseChain(second.id)?.map(({ response }) => response.id)
+    ).toEqual([first.id, second.id]);
+
+    now = 15;
+    expect(store.values()).toEqual([]);
+  });
+
+  test("rejects continuations with missing response-chain ancestors", async () => {
+    const server = await startServer(createEchoRunnable());
+    const first = await createResponse(server.url, { input: "first" });
+    const second = await createResponse(server.url, {
+      input: "second",
+      previous_response_id: first.id,
+    });
+    await fetch(`${server.url}/responses/${first.id}`, { method: "DELETE" });
+
+    const continuation = await fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        input: "third",
+        previous_response_id: second.id,
+      }),
+    });
+
+    expect(continuation.status).toBe(409);
+    expect(await continuation.json()).toMatchObject({
+      error: { code: "response_chain_incomplete" },
+    });
+  });
+
+  test("does not evict stored responses for ephemeral requests", async () => {
+    const store = new InMemoryResponseStore({
+      maxRecords: 1,
+      ttlMs: 60_000,
+    });
+    const server = await startServer(createEchoRunnable(), { store });
+    const persisted = await createResponse(server.url, { input: "persisted" });
+
+    const ephemeral = await fetch(`${server.url}/responses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input: "ephemeral", store: false }),
+    });
+
+    expect(ephemeral.status).toBe(503);
+    expect(store.get(persisted.id)?.response.id).toBe(persisted.id);
   });
 
   test("rejects new work at capacity and promptly cancels ignored invokes", async () => {
