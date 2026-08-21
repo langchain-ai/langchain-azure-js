@@ -141,9 +141,7 @@ describe("ResponsesHostServer", () => {
   test("uses final stream values to complete update output", async () => {
     const functionCall = new AIMessage({
       content: "",
-      tool_calls: [
-        { id: "call_lookup", name: "lookup", args: { query: "x" } },
-      ],
+      tool_calls: [{ id: "call_lookup", name: "lookup", args: { query: "x" } }],
     });
     const runnable: ResponsesRunnable = {
       invoke: async () => ({ messages: [] }),
