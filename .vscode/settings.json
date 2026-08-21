@@ -1,6 +1,35 @@
 {
-    "cSpell.words": [
-        "langchain",
-        "langgraph"
-    ]
+  "editor.formatOnSave": true,
+  "prettier.configPath": "${workspaceFolder}/.prettierrc",
+  "prettier.ignorePath": "${workspaceFolder}/.prettierignore",
+  "[typescript]": {
+
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[json]": {
+
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[jsonc]": {
+
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+  },
+  "[yaml]": {
+
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[mdx]": {
+
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "cSpell.words": ["langchain", "langgraph"]
 }
