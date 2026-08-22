@@ -1,3 +1,11 @@
+index.cjs
+index.js
+index.d.ts
+index.d.cts
+agents/hosting.cjs
+agents/hosting.js
+agents/hosting.d.ts
+agents/hosting.d.cts
 node_modules
 dist
 .yarn
