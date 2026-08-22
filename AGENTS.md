@@ -29,6 +29,14 @@
 - Because the repository is early-stage, design new modules around credible future extension points rather than one-off implementations. Ground extensibility in known service capabilities, upstream patterns, or the Python counterpart, and do not add generic abstractions without a concrete use case.
 - Give newly introduced or modified public APIs complete, precise TSDoc that describes parameters, return values, errors, constraints, and useful examples where appropriate. Keep internal comments short and focused on non-obvious rationale; prefer clearer structure and names over large narrative comment blocks.
 
+## Azure Authentication
+
+- Every integration that connects to an Azure resource must support both API-key authentication and Microsoft Entra ID authentication before release. This is a hard requirement; neither mode may be deferred as optional follow-up work.
+- Use the official Azure SDK authentication primitives appropriate to the service: service-native key credentials for API keys and Azure Identity credentials or token providers for Microsoft Entra ID. Keep credential resolution separate from transport and LangChain behavior.
+- Make authentication selection explicit and deterministic. Document and test validation or precedence when multiple credential sources are present, and never silently downgrade from Microsoft Entra ID to an API key.
+- Document setup and provide focused tests for both authentication paths. Tests must verify that either mode works independently and does not require configuration for the other mode.
+- If the underlying Azure service or supported Azure SDK cannot provide one of the two modes, stop and surface it as a design blocker before implementation or release; do not silently ship a single-mode integration.
+
 ## Quality Review
 
 - At meaningful implementation checkpoints, review the complete diff, including tests and documentation, for correctness, unnecessary complexity, weak abstractions, awkward internal parameter shapes, duplication, dead paths, stale scaffolding, and temporary workarounds. Remove low-quality code as soon as it is identified rather than carrying it to final review.
@@ -42,6 +50,8 @@
 - If no SDK documentation exists, create its `README.md` under `docs/<sdk-name>/` before implementation. If it exists, review its current design and constraints first.
 - When the feature has no established design, work through its public contract, upstream compatibility, Azure-specific behavior, edge cases, and validation strategy before writing the implementation.
 - Use the gitignored root `.agent-drafts/` directory for temporary todo lists, development workflows, and lightweight specifications when useful. These drafts may be shared with developers for review and direct revision during implementation.
+- When a task requires frequent, close inspection across LangChain.js, LangGraph.js, the Python counterpart, or a critical dependency repository, a shallow clone may be placed under `.agent-drafts/repos/<repository-name>/`. Clone only the remote's default branch, keep the history depth below 20 commits, and clone only repositories materially needed for the current work.
+- Treat repositories under `.agent-drafts/repos/` as temporary, read-only references. Record the upstream URL and inspected commit SHA in the working draft, and in durable documentation when a lasting design decision depends on it; never make repository code or builds depend on files in these clones. Remove each clone as soon as the task no longer needs it.
 - Never put credentials, tokens, connection strings, customer data, or other sensitive values in `.agent-drafts/`.
 - Treat `.agent-drafts/` as temporary working material, not durable documentation. After implementation is complete, record the final behavior and lasting design decisions in the appropriate location under `docs/` and remove the corresponding draft.
 

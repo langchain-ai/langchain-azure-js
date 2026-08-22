@@ -12,7 +12,7 @@ This file extends the repository-level [`AGENTS.md`](../../AGENTS.md) for work u
 
 - Start with the matching interface or base class in the supported `@langchain/core` version, then compare the nearest upstream LangChain.js integration before defining the Azure API.
 - Match upstream constructor patterns, call options, message and document types, generation chunks, metadata, usage reporting, callbacks, and serialization identifiers as applicable.
-- Use official Azure SDK clients and standard credential types when available. Prefer accepting injectable clients or credentials over creating incompatible authentication abstractions.
+- Implement both required authentication paths with official Azure SDK clients and standard credential types: service-native key credentials for API keys and Azure Identity credentials or token providers for Microsoft Entra ID. Prefer accepting injectable clients or credentials over creating incompatible authentication abstractions.
 - Keep credentials out of logs, errors, tracing payloads, and serialized state. Declare secret mappings for serializable LangChain components when applicable.
 - Forward cancellation signals and use established LangChain retry/caller mechanisms where the underlying API supports them. Avoid stacking independent retry policies without a documented reason.
 - For streaming APIs, emit standard LangChain chunks incrementally and invoke token callbacks consistently; do not buffer the complete response first.
@@ -24,7 +24,7 @@ This file extends the repository-level [`AGENTS.md`](../../AGENTS.md) for work u
 ## Testing and Validation
 
 - Put isolated tests in `src/tests/*.test.ts` and live-service tests in `src/tests/*.int.test.ts`.
-- Unit tests must not require Azure credentials or network access. Mock at the Azure client boundary and assert the observable LangChain contract.
+- Unit tests must not require Azure credentials or network access. Mock at the Azure client boundary, cover credential selection and client construction for both API-key and Microsoft Entra ID authentication, and assert the observable LangChain contract.
 - Integration tests should use environment-based configuration, avoid destructive operations by default, clean up resources they create, and never print secrets.
 - While iterating, use the narrowest check that can validate the current change, normally `yarn workspace langchain-azure test:single src/tests/<file>.test.ts` for a focused unit test. Use editor diagnostics or a targeted command instead when they provide a cheaper relevant signal.
 - Once the implementation is believed complete, run these package-level checks:
