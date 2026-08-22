@@ -1,0 +1,36 @@
+# LangChain Azure SDK Guidelines
+
+This file extends the repository-level [`AGENTS.md`](../../AGENTS.md) for work under `libs/langchain-azure`.
+
+## Package Role
+
+- `langchain-azure` exposes LangChain-compatible integrations for Azure resources. Its components should compose with normal LangChain.js runnables and remain usable inside LangGraph.js applications without adapters.
+- The package is currently an integration scaffold. Treat placeholder names, descriptions, methods, secrets, and tests as templates to replace, not established API conventions.
+- Keep implementation code in `src/`, tests in `src/tests/`, and public exports in `src/index.ts` unless package export configuration is deliberately expanded.
+
+## API and Implementation Design
+
+- Start with the matching interface or base class in the supported `@langchain/core` version, then compare the nearest upstream LangChain.js integration before defining the Azure API.
+- Match upstream constructor patterns, call options, message and document types, generation chunks, metadata, usage reporting, callbacks, and serialization identifiers as applicable.
+- Use official Azure SDK clients and standard credential types when available. Prefer accepting injectable clients or credentials over creating incompatible authentication abstractions.
+- Keep credentials out of logs, errors, tracing payloads, and serialized state. Declare secret mappings for serializable LangChain components when applicable.
+- Forward cancellation signals and use established LangChain retry/caller mechanisms where the underlying API supports them. Avoid stacking independent retry policies without a documented reason.
+- For streaming APIs, emit standard LangChain chunks incrementally and invoke token callbacks consistently; do not buffer the complete response first.
+- Translate Azure responses into standard LangChain outputs while retaining useful Azure metadata in the conventional response or document metadata fields.
+- Use ESM-compatible TypeScript and include `.js` extensions in relative imports, matching the existing source and NodeNext resolution setup.
+- Keep the root export surface intentional. Do not expose Azure SDK internals or implementation-only helpers accidentally.
+- Do not change the `@langchain/core` peer range incidentally. If a feature requires a newer upstream contract, update the range, implementation, and compatibility tests together.
+
+## Testing and Validation
+
+- Put isolated tests in `src/tests/*.test.ts` and live-service tests in `src/tests/*.int.test.ts`.
+- Unit tests must not require Azure credentials or network access. Mock at the Azure client boundary and assert the observable LangChain contract.
+- Integration tests should use environment-based configuration, avoid destructive operations by default, clean up resources they create, and never print secrets.
+- Use these package-scoped commands while iterating:
+  - `yarn workspace langchain-azure test:single src/tests/<file>.test.ts`
+  - `yarn workspace langchain-azure test`
+  - `yarn workspace langchain-azure lint`
+  - `yarn workspace langchain-azure format:check`
+  - `yarn workspace langchain-azure build`
+- Run `yarn workspace langchain-azure test:int` only when the required Azure resources and environment variables are available. State clearly when integration tests were not run.
+- For public API changes, verify both behavior and generated type/export compatibility with a package build.
