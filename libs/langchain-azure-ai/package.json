@@ -1,7 +1,7 @@
 {
-  "name": "langchain-azure",
+  "name": "langchain-azure-ai",
   "version": "0.0.0",
-  "description": "Sample INTEGRATION_SHORT_NAME integration for LangChain.js",
+  "description": "Azure AI integrations for LangChain.js and LangGraph.js",
   "type": "module",
   "engines": {
     "node": ">=18"
@@ -10,24 +10,25 @@
   "types": "./index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git@github.com:langchain-ai/langchainjs.git"
+    "url": "https://github.com/langchain-ai/langchain-azure-js.git",
+    "directory": "libs/langchain-azure-ai"
   },
-  "homepage": "https://github.com/langchain-ai/langchainjs/tree/main/libs/INTEGRATION_NAME/",
+  "homepage": "https://github.com/langchain-ai/langchain-azure-js/tree/main/libs/langchain-azure-ai",
   "scripts": {
-    "build": "yarn turbo:command build:internal --filter=langchain-azure",
-    "build:internal": "yarn lc_build --create-entrypoints --pre --tree-shaking",
+    "build": "pnpm --workspace-root run turbo:command build:internal --filter=langchain-azure-ai",
+    "build:internal": "lc_build --create-entrypoints --pre --tree-shaking",
     "lint:eslint": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache --ext .ts,.js src/",
     "lint:dpdm": "dpdm --exit-code circular:1 --no-warning --no-tree src/*.ts src/**/*.ts",
-    "lint": "yarn lint:eslint && yarn lint:dpdm",
-    "lint:fix": "yarn lint:eslint --fix && yarn lint:dpdm",
+    "lint": "pnpm run lint:eslint && pnpm run lint:dpdm",
+    "lint:fix": "pnpm run lint:eslint --fix && pnpm run lint:dpdm",
     "clean": "rm -rf .turbo dist/",
-    "prepack": "yarn build",
+    "prepack": "pnpm run build",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --testPathIgnorePatterns=\\.int\\.test.ts --testTimeout 30000 --maxWorkers=50%",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch --testPathIgnorePatterns=\\.int\\.test.ts",
-    "test:single": "NODE_OPTIONS=--experimental-vm-modules yarn run jest --config jest.config.cjs --testTimeout 100000",
+    "test:single": "NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.cjs --testTimeout 100000",
     "test:int": "NODE_OPTIONS=--experimental-vm-modules jest --testPathPattern=\\.int\\.test.ts --testTimeout 100000 --maxWorkers=50%",
-    "format": "prettier --config .prettierrc --write \"src\"",
-    "format:check": "prettier --config .prettierrc --check \"src\""
+    "format": "prettier --config ../../.prettierrc --ignore-path ../../.prettierignore --write \"src\"",
+    "format:check": "prettier --config ../../.prettierrc --ignore-path ../../.prettierignore --check \"src\""
   },
   "author": "LangChain",
   "license": "MIT",
@@ -74,11 +75,5 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "index.cjs",
-    "index.js",
-    "index.d.ts",
-    "index.d.cts"
-  ]
+  "files": ["dist/", "index.cjs", "index.js", "index.d.ts", "index.d.cts"]
 }

@@ -1,3 +1,5 @@
 babel.config.js
 jest.config.js
 .eslintrc.js
+pnpm-lock.yaml
+pnpm-lock.yml
