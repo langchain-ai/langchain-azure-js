@@ -2,7 +2,7 @@
 
 ⚡ Building applications with LLMs through composability ⚡
 
-[![CI](https://github.com/langchain-ai/langchainjs/actions/workflows/ci.yml/badge.svg)](https://github.com/langchain-ai/langchainjs/actions/workflows/ci.yml) ![npm](https://img.shields.io/npm/dm/langchain) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/langchainai.svg?style=social&label=Follow%20%40LangChainAI)](https://twitter.com/langchainai)  [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/langchain-ai/langchainjs)
+[![CI](https://github.com/langchain-ai/langchainjs/actions/workflows/ci.yml/badge.svg)](https://github.com/langchain-ai/langchainjs/actions/workflows/ci.yml) ![npm](https://img.shields.io/npm/dm/langchain) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/langchainai.svg?style=social&label=Follow%20%40LangChainAI)](https://twitter.com/langchainai) [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/langchain-ai/langchainjs)
 [<img src="https://github.com/codespaces/badge.svg" title="Open in Github Codespace" width="150" height="20">](https://codespaces.new/langchain-ai/langchainjs)
 
 Looking for the Python version? Check out [LangChain](https://github.com/langchain-ai/langchain).
@@ -12,7 +12,7 @@ To help you ship LangChain apps to production faster, check out [LangSmith](http
 
 ## ⚡️ Quick Install
 
-You can use npm, yarn, or pnpm to install LangChain.js
+Applications consuming LangChain.js can use npm, Yarn, or pnpm.
 
 `npm install -S langchain` or `yarn add langchain` or `pnpm add langchain`
 
@@ -30,16 +30,19 @@ LangChain is written in TypeScript and can be used in:
 ## 🤔 What is LangChain?
 
 **LangChain** is a framework for developing applications powered by language models. It enables applications that:
+
 - **Are context-aware**: connect a language model to sources of context (prompt instructions, few shot examples, content to ground its response in, etc.)
 - **Reason**: rely on a language model to reason (about how to answer based on provided context, what actions to take, etc.)
 
 This framework consists of several parts.
+
 - **Open-source libraries**: Build your applications using LangChain's open-source [building blocks](https://js.langchain.com/docs/concepts/lcel), [components](https://js.langchain.com/docs/concepts), and [third-party integrations](https://js.langchain.com/docs/integrations/platforms/).
-Use [LangGraph.js](https://js.langchain.com/docs/concepts/#langgraphjs) to build stateful agents with first-class streaming and human-in-the-loop support.
+  Use [LangGraph.js](https://js.langchain.com/docs/concepts/#langgraphjs) to build stateful agents with first-class streaming and human-in-the-loop support.
 - **Productionization**: Use [LangSmith](https://docs.smith.langchain.com/) to inspect, monitor and evaluate your chains, so that you can continuously optimize and deploy with confidence.
 - **Deployment**: Turn your LangGraph applications into production-ready APIs and Assistants with [LangGraph Cloud](https://langchain-ai.github.io/langgraph/cloud/).
 
 The LangChain libraries themselves are made up of several different packages.
+
 - **[`@langchain/core`](https://github.com/langchain-ai/langchainjs/blob/main/langchain-core)**: Base abstractions and LangChain Expression Language.
 - **[`@langchain/community`](https://github.com/langchain-ai/langchainjs/blob/main/libs/langchain-community)**: Third party integrations.
 - **[`langchain`](https://github.com/langchain-ai/langchainjs/blob/main/langchain)**: Chains, agents, and retrieval strategies that make up an application's cognitive architecture.
@@ -64,10 +67,11 @@ This library aims to assist in the development of those types of applications. C
 ## 🚀 How does LangChain help?
 
 The main value props of the LangChain libraries are:
+
 1. **Components**: composable tools and integrations for working with language models. Components are modular and easy-to-use, whether you are using the rest of the LangChain framework or not
 2. **Off-the-shelf chains**: built-in assemblages of components for accomplishing higher-level tasks
 
-Off-the-shelf chains make it easy to get started. Components make it easy to customize existing chains and build new ones. 
+Off-the-shelf chains make it easy to get started. Components make it easy to customize existing chains and build new ones.
 
 Components fall into the following **modules**:
 
@@ -91,6 +95,26 @@ Please see [here](https://js.langchain.com) for full documentation, which includ
 - Overview of the [interfaces](https://js.langchain.com/docs/how_to/lcel_cheatsheet/), [modules](https://js.langchain.com/docs/concepts) and [integrations](https://js.langchain.com/docs/integrations/platforms/)
 - [Tutorial](https://js.langchain.com/docs/tutorials/) walkthroughs
 - [Reference](https://api.js.langchain.com): full API docs
+
+## Development
+
+This repository uses pnpm workspaces and requires pnpm for dependency installation and development. The supported pnpm version is pinned in the root `package.json`. Do not use npm or Yarn to install repository dependencies because `pnpm-lock.yaml` is the source of truth for the workspace.
+
+Node.js 18 or later is required. Run all commands from the repository root:
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+pnpm build
+```
+
+Before submitting a change, run the relevant repository checks:
+
+```bash
+pnpm lint
+pnpm test
+pnpm format:check
+```
 
 ## 💁 Contributing
 
