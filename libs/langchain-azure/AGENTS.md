@@ -26,7 +26,7 @@ This file extends the repository-level [`AGENTS.md`](../../AGENTS.md) for work u
 - Put isolated tests in `src/tests/*.test.ts` and live-service tests in `src/tests/*.int.test.ts`.
 - Unit tests must not require Azure credentials or network access. Mock at the Azure client boundary, cover credential selection and client construction for both API-key and Microsoft Entra ID authentication, and assert the observable LangChain contract.
 - Integration tests should use environment-based configuration, avoid destructive operations by default, clean up resources they create, and never print secrets.
-- While iterating, use the narrowest check that can validate the current change, normally `yarn workspace langchain-azure test:single src/tests/<file>.test.ts` for a focused unit test. Use editor diagnostics or a targeted command instead when they provide a cheaper relevant signal.
+- While iterating, use the narrowest check that can validate the current change, normally `pnpm --filter langchain-azure run test:single src/tests/<file>.test.ts` for a focused unit test. Use editor diagnostics or a targeted command instead when they provide a cheaper relevant signal.
 - Once the implementation is believed complete, run the final build, test, lint, and formatting checks through the repository-level commands in the root `AGENTS.md`; do not add package-local lint or formatting configuration as a separate CI gate.
-- Run `yarn workspace langchain-azure test:int` only when the required Azure resources and environment variables are available. State clearly when integration tests were not run.
+- Run `pnpm --filter langchain-azure run test:int` only when the required Azure resources and environment variables are available. State clearly when integration tests were not run.
 - For public API changes, verify both behavior and generated type/export compatibility with a package build.

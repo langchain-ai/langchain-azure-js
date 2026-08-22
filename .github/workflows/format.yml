@@ -4,10 +4,9 @@ name: Format
 
 on:
   pull_request:
-    paths_ignore:
-      - '.github/**'
-  workflow_dispatch:  # Allows triggering the workflow manually in GitHub UI
-
+    paths-ignore:
+      - ".github/**"
+  workflow_dispatch: # Allows triggering the workflow manually in GitHub UI
 
 # If another push to the same PR or branch happens while this workflow is still running,
 # cancel the earlier run in favor of the next run.
@@ -28,14 +27,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
       - name: Use Node.js 20.x
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
-          cache: "yarn"
+          cache: "pnpm"
       - name: Install dependencies
-        run: yarn install --immutable --mode=skip-build
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Check formatting
-        run: yarn run format:check
+        run: pnpm run format:check
