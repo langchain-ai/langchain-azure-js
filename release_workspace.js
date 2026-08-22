@@ -51,11 +51,7 @@ function getWorkspaceVersion(workspaceDirectory) {
  * @returns {Array<{ dir: string, packageJSON: Record<string, any>}>}
  */
 function getAllWorkspaces() {
-  const possibleWorkspaceDirectories = [
-    "./libs/*",
-    "./langchain",
-    "./langchain-core",
-  ];
+  const possibleWorkspaceDirectories = ["./libs/*"];
   const allWorkspaces = possibleWorkspaceDirectories.flatMap(
     (workspaceDirectory) => {
       if (workspaceDirectory.endsWith("*")) {
@@ -294,7 +290,7 @@ Workspaces:
     execSyncWithErrorHandling(`git push -u origin ${newBranchName}`);
     console.log(
       "🔗 Open %s and merge the bump-deps PR.",
-      `\x1b[34mhttps://github.com/langchain-ai/langchainjs/compare/${newBranchName}?expand=1\x1b[0m`
+      `\x1b[34mhttps://github.com/langchain-ai/langchain-azure-js/compare/${newBranchName}?expand=1\x1b[0m`
     );
   } else {
     console.log(`No workspaces depend on ${workspaceName}.`);
@@ -487,7 +483,7 @@ async function main() {
   // Log release branch URL
   console.log(
     "🔗 Open %s and merge the release PR.",
-    `\x1b[34mhttps://github.com/langchain-ai/langchainjs/compare/release?expand=1\x1b[0m`
+    `\x1b[34mhttps://github.com/langchain-ai/langchain-azure-js/compare/release?expand=1\x1b[0m`
   );
 
   // If `bump-deps` flag is set, find all workspaces which depend on the input workspace.

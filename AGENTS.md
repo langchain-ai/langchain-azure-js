@@ -74,5 +74,5 @@
 - Add or update focused unit tests for behavior changes. Add integration coverage when correctness depends on a live Azure service.
 - Update public documentation and examples when changing installation, configuration, authentication, exports, or user-visible behavior.
 - Never commit credentials, connection strings, access keys, tokens, or recorded responses containing sensitive customer data.
-- Use Conventional Commits-style titles for commits and pull requests whenever possible, for example `feat(langchain-azure): add managed identity support` or `fix(vectorstores): forward abort signals`.
+- Use Conventional Commits-style titles for commits and pull requests whenever possible, for example `feat(langchain-azure-ai): add managed identity support` or `fix(vectorstores): forward abort signals`.
 - If these instructions no longer match the repository's tooling or current best practices, update the relevant `AGENTS.md` in the same change. Verify the new guidance against working configuration, source, or upstream documentation.

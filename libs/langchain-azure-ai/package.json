@@ -1,7 +1,7 @@
 {
-  "name": "langchain-azure",
+  "name": "langchain-azure-ai",
   "version": "0.0.0",
-  "description": "Sample INTEGRATION_SHORT_NAME integration for LangChain.js",
+  "description": "Azure AI integrations for LangChain.js and LangGraph.js",
   "type": "module",
   "engines": {
     "node": ">=18"
@@ -10,11 +10,12 @@
   "types": "./index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git@github.com:langchain-ai/langchainjs.git"
+    "url": "https://github.com/langchain-ai/langchain-azure-js.git",
+    "directory": "libs/langchain-azure-ai"
   },
-  "homepage": "https://github.com/langchain-ai/langchainjs/tree/main/libs/INTEGRATION_NAME/",
+  "homepage": "https://github.com/langchain-ai/langchain-azure-js/tree/main/libs/langchain-azure-ai",
   "scripts": {
-    "build": "pnpm --workspace-root run turbo:command build:internal --filter=langchain-azure",
+    "build": "pnpm --workspace-root run turbo:command build:internal --filter=langchain-azure-ai",
     "build:internal": "lc_build --create-entrypoints --pre --tree-shaking",
     "lint:eslint": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache --ext .ts,.js src/",
     "lint:dpdm": "dpdm --exit-code circular:1 --no-warning --no-tree src/*.ts src/**/*.ts",
@@ -74,11 +75,5 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "index.cjs",
-    "index.js",
-    "index.d.ts",
-    "index.d.cts"
-  ]
+  "files": ["dist/", "index.cjs", "index.js", "index.d.ts", "index.d.cts"]
 }

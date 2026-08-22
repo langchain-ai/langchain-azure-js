@@ -1,9 +1,5 @@
 packages:
-  - "langchain"
-  - "langchain-core"
   - "libs/*"
-  - "examples"
-  - "docs/*"
 
 supportedArchitectures:
   cpu:
@@ -15,3 +11,4 @@ supportedArchitectures:
   os:
     - darwin
     - linux
+    - win32

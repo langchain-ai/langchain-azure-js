@@ -1,10 +1,10 @@
-# LangChain Azure SDK Guidelines
+# LangChain Azure AI SDK Guidelines
 
-This file extends the repository-level [`AGENTS.md`](../../AGENTS.md) for work under `libs/langchain-azure`.
+This file extends the repository-level [`AGENTS.md`](../../AGENTS.md) for work under `libs/langchain-azure-ai`.
 
 ## Package Role
 
-- `langchain-azure` exposes LangChain-compatible integrations for Azure resources. Its components should compose with normal LangChain.js runnables and remain usable inside LangGraph.js applications without adapters.
+- `langchain-azure-ai` exposes LangChain-compatible integrations for Azure AI resources. Its components should compose with normal LangChain.js runnables and remain usable inside LangGraph.js applications without adapters.
 - The source currently contains integration scaffold placeholders. Treat only code that is explicitly recognizable as placeholder content as replaceable scaffolding; once an API is documented, exported as intentional behavior, or published, the repository's public API stability rules apply. Remove this note when the scaffold has been replaced.
 - Keep implementation code in `src/`, tests in `src/tests/`, and public exports in `src/index.ts` unless package export configuration is deliberately expanded.
 
@@ -26,7 +26,7 @@ This file extends the repository-level [`AGENTS.md`](../../AGENTS.md) for work u
 - Put isolated tests in `src/tests/*.test.ts` and live-service tests in `src/tests/*.int.test.ts`.
 - Unit tests must not require Azure credentials or network access. Mock at the Azure client boundary, cover credential selection and client construction for both API-key and Microsoft Entra ID authentication, and assert the observable LangChain contract.
 - Integration tests should use environment-based configuration, avoid destructive operations by default, clean up resources they create, and never print secrets.
-- While iterating, use the narrowest check that can validate the current change, normally `pnpm --filter langchain-azure run test:single src/tests/<file>.test.ts` for a focused unit test. Use editor diagnostics or a targeted command instead when they provide a cheaper relevant signal.
+- While iterating, use the narrowest check that can validate the current change, normally `pnpm --filter langchain-azure-ai run test:single src/tests/<file>.test.ts` for a focused unit test. Use editor diagnostics or a targeted command instead when they provide a cheaper relevant signal.
 - Once the implementation is believed complete, run the final build, test, lint, and formatting checks through the repository-level commands in the root `AGENTS.md`; do not add package-local lint or formatting configuration as a separate CI gate.
-- Run `pnpm --filter langchain-azure run test:int` only when the required Azure resources and environment variables are available. State clearly when integration tests were not run.
+- Run `pnpm --filter langchain-azure-ai run test:int` only when the required Azure resources and environment variables are available. State clearly when integration tests were not run.
 - For public API changes, verify both behavior and generated type/export compatibility with a package build.
