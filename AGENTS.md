@@ -61,10 +61,10 @@
 - Use the repository-pinned Yarn version. Use `yarn`, not npm or pnpm, for dependency and script operations.
 - Install dependencies with `yarn install`.
 - Run repository checks with `yarn build`, `yarn lint`, `yarn test`, and `yarn format:check`.
-- Avoid repeatedly running broad test and lint suites while implementation is still changing. During iteration, run only the narrowest relevant test, typecheck, or lint command when feedback is needed; once the change is believed complete, run the package-level checks, then broader repository checks when shared configuration, dependencies, or cross-package contracts changed.
+- Avoid repeatedly running broad test and lint suites while implementation is still changing. During iteration, run only the narrowest relevant test, typecheck, or lint command when feedback is needed; once the change is believed complete, run the repository-level checks from the root.
 - Treat VS Code as the recommended development environment. Keep `.vscode/settings.json`, recommended extensions, repository scripts, and CI aligned so editor formatting and diagnostics use the same checked-in configuration and effective options as command-line and CI checks.
-- Keep tooling configuration in shared files whenever possible. CI should invoke repository scripts rather than duplicate formatter, linter, compiler, or test-runner flags that can drift from local and VS Code behavior.
-- Maintain exactly one root `.prettierrc` and one root `.prettierignore` for the entire monorepo. Package scripts, VS Code, and CI must consume those root files; do not add package-local Prettier configuration or ignore files.
+- Keep tooling configuration in shared files whenever possible. CI should invoke root repository scripts rather than duplicate formatter, linter, compiler, or test-runner flags that can drift from local and VS Code behavior; do not create separate package-level lint or formatting gates.
+- Maintain exactly one root `.prettierrc` and one root `.prettierignore` for the entire monorepo. Run Prettier from the repository root, and make VS Code, repository scripts, and CI consume those root files; do not add package-local Prettier configuration, ignore files, or config paths.
 - Use one repository-wide test framework and centralize its dependencies and shared configuration at the root. Package-specific test setup may extend the shared configuration only for genuine environment or service differences; do not duplicate the framework or its common dependencies per package.
 - Do not edit generated output such as `dist/` or generated package entrypoints. Change source or build configuration and regenerate it through package scripts.
 
