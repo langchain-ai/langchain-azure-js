@@ -17,5 +17,5 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["langchain", "langgraph"]
+  "cSpell.words": ["langchain", "langgraph", "libc"]
 }

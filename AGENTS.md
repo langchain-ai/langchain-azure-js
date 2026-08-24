@@ -58,9 +58,9 @@
 ## Monorepo Workflow
 
 - Keep supported Node.js versions aligned with the current LangChain.js support policy. Treat package `engines` fields and the CI version matrix as the executable support contract; verify upstream before changing them, and update packages, CI, and documentation together.
-- Use the repository-pinned Yarn version. Use `yarn`, not npm or pnpm, for dependency and script operations.
-- Install dependencies with `yarn install`.
-- Run repository checks with `yarn build`, `yarn lint`, `yarn test`, and `yarn format:check`.
+- Use the repository-pinned pnpm version. Use `pnpm`, not npm or Yarn, for dependency and script operations.
+- Install dependencies with `pnpm install`.
+- Run repository checks with `pnpm build`, `pnpm lint`, `pnpm test`, and `pnpm format:check`.
 - Avoid repeatedly running broad test and lint suites while implementation is still changing. During iteration, run only the narrowest relevant test, typecheck, or lint command when feedback is needed; once the change is believed complete, run the repository-level checks from the root.
 - Treat VS Code as the recommended development environment. Keep `.vscode/settings.json`, recommended extensions, repository scripts, and CI aligned so editor formatting and diagnostics use the same checked-in configuration and effective options as command-line and CI checks.
 - Keep tooling configuration in shared files whenever possible. CI should invoke root repository scripts rather than duplicate formatter, linter, compiler, or test-runner flags that can drift from local and VS Code behavior; do not create separate package-level lint or formatting gates.
@@ -74,5 +74,5 @@
 - Add or update focused unit tests for behavior changes. Add integration coverage when correctness depends on a live Azure service.
 - Update public documentation and examples when changing installation, configuration, authentication, exports, or user-visible behavior.
 - Never commit credentials, connection strings, access keys, tokens, or recorded responses containing sensitive customer data.
-- Use Conventional Commits-style titles for commits and pull requests whenever possible, for example `feat(langchain-azure): add managed identity support` or `fix(vectorstores): forward abort signals`.
+- Use Conventional Commits-style titles for commits and pull requests whenever possible, for example `feat(langchain-azure-ai): add managed identity support` or `fix(vectorstores): forward abort signals`.
 - If these instructions no longer match the repository's tooling or current best practices, update the relevant `AGENTS.md` in the same change. Verify the new guidance against working configuration, source, or upstream documentation.
