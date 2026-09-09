@@ -57,6 +57,7 @@
       "brace-expansion@^2.0.1": "2.1.4",
       "brace-expansion@^5.0.2": "5.0.9",
       "tar@^7.4.3": "7.5.21",
+      "browserslist": ">=4.28.7",
       "langsmith": ">=0.6.0",
       "socks@^2.8.3": "2.8.9",
       "tmp@^0.0.33": "0.2.7",
