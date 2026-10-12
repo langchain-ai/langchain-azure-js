@@ -5,6 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  axios@<1.20.0: 1.20.0
+  basic-ftp@<6.2.1: 6.2.1
   dpdm@^3.12.0: 3.12.0
   lodash: ">=4.18.1"
   js-yaml: ">=5.2.2"
@@ -18,9 +20,9 @@ overrides:
   glob@^10.3.7: 10.5.0
   glob@^10.3.10: 10.5.0
   "@octokit/plugin-paginate-rest@11.3.1": ">=11.4.1"
-  brace-expansion@^1.1.7: 5.0.9
+  brace-expansion@^1.1.7: 5.0.12
   brace-expansion@^2.0.1: 2.1.4
-  brace-expansion@^5.0.2: 5.0.9
+  brace-expansion@^5.0.2: 5.0.12
   tar@^7.4.3: 7.5.21
   browserslist: ">=4.28.7"
   langsmith: ">=0.6.0"
@@ -1753,10 +1755,10 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
-  axios@1.18.1:
+  axios@1.20.0:
     resolution:
       {
-        integrity: sha512-3nTvFlvpn9Zu/RkHUqtc7/+al4UpRW5az71ap5zccp6e8RAYEzhMTecX8Dz1wWDYrPpUoB1HAQEGEAEvUr7S9g==,
+        integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==,
       }
 
   babel-jest@29.7.0:
@@ -1826,10 +1828,10 @@ packages:
     engines: { node: ">=6.0.0" }
     hasBin: true
 
-  basic-ftp@5.3.1:
+  basic-ftp@6.2.1:
     resolution:
       {
-        integrity: sha512-bopVNp6ugyA150DDuZfPFdt1KZ5a94ZDiwX4hMgZDzF+GttD80lEy8kj98kbyhLXnPvhtIo93mdnLIjpCAeeOw==,
+        integrity: sha512-bK67isD+lKq46AU8vNtjvMaT2ZqAOAmNCbxUHlFBRD4k15NWxyEjmaKtZPlgce58So4BNTjITGQOVTjL9y0ECA==,
       }
     engines: { node: ">=10.0.0" }
 
@@ -1864,10 +1866,10 @@ packages:
         integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==,
       }
 
-  brace-expansion@5.0.9:
+  brace-expansion@5.0.12:
     resolution:
       {
-        integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==,
+        integrity: sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==,
       }
     engines: { node: 20 || >=22 }
 
@@ -6320,7 +6322,7 @@ snapshots:
     dependencies:
       "@octokit/rest": 21.1.1
       "@rollup/wasm-node": 4.38.0
-      axios: 1.18.1
+      axios: 1.20.0
       commander: 11.1.0
       glob: 10.5.0
       lodash: 4.18.1
@@ -6961,7 +6963,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.18.1:
+  axios@1.20.0:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.6
@@ -7034,7 +7036,7 @@ snapshots:
 
   baseline-browser-mapping@2.11.21: {}
 
-  basic-ftp@5.3.1: {}
+  basic-ftp@6.2.1: {}
 
   before-after-hook@2.2.3: {}
 
@@ -7061,7 +7063,7 @@ snapshots:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.9:
+  brace-expansion@5.0.12:
     dependencies:
       balanced-match: 4.0.4
 
@@ -7811,7 +7813,7 @@ snapshots:
 
   get-uri@6.0.4:
     dependencies:
-      basic-ftp: 5.3.1
+      basic-ftp: 6.2.1
       data-uri-to-buffer: 6.0.2
       debug: 4.4.0
     transitivePeerDependencies:
@@ -8712,7 +8714,7 @@ snapshots:
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 5.0.12
 
   minimatch@5.1.8:
     dependencies:
@@ -8720,7 +8722,7 @@ snapshots:
 
   minimatch@9.0.7:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 5.0.12
 
   minimist@1.2.8: {}
 
