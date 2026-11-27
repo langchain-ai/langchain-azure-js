@@ -7,7 +7,7 @@ settings:
 overrides:
   axios@<1.20.0: 1.20.0
   follow-redirects@<1.16.2: 1.16.3
-  basic-ftp@<6.2.1: 6.2.1
+  basic-ftp@<6.2.4: 6.2.4
   dpdm@^3.12.0: 3.12.0
   lodash: ">=4.18.1"
   ip-address: ">=10.7.1"
@@ -1834,10 +1834,10 @@ packages:
     engines: { node: ">=6.0.0" }
     hasBin: true
 
-  basic-ftp@6.2.1:
+  basic-ftp@6.2.4:
     resolution:
       {
-        integrity: sha512-bK67isD+lKq46AU8vNtjvMaT2ZqAOAmNCbxUHlFBRD4k15NWxyEjmaKtZPlgce58So4BNTjITGQOVTjL9y0ECA==,
+        integrity: sha512-6ACKOQxSlv5xka4i03ujfncNr9qp5yZNK3u0+yUFTAU4HfG5AeztCC9+R1I9dm8oq+1vt4RZ7cIRTBrdHqL2mw==,
       }
     engines: { node: ">=10.0.0" }
 
@@ -7036,7 +7036,7 @@ snapshots:
 
   baseline-browser-mapping@2.11.21: {}
 
-  basic-ftp@6.2.1: {}
+  basic-ftp@6.2.4: {}
 
   before-after-hook@2.2.3: {}
 
@@ -7813,7 +7813,7 @@ snapshots:
 
   get-uri@6.0.4:
     dependencies:
-      basic-ftp: 6.2.1
+      basic-ftp: 6.2.4
       data-uri-to-buffer: 6.0.2
       debug: 4.4.0
     transitivePeerDependencies:
